@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Submit a support request to GeorgeTech.">
+  <title>Support Tickets | GeorgeTech</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <style>
+    :root {
+      --navy: #092b63;
+      --blue: #0d73ce;
+      --green: #65b92e;
+      --ink: #16233a;
+      --muted: #607087;
+      --line: #d9e2ed;
+      --surface: #ffffff;
+      --background: #f4f8fc;
+      --focus: rgba(13, 115, 206, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--background) url("assets/images/site-background.png") center / cover fixed no-repeat;
+    }
+
+    header {
+      width: 100%;
+      height: 64px;
+      margin: 30px 0 34px;
+      padding: 0 max(24px, calc((100vw - 1120px) / 2 + 24px));
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      overflow: visible;
+      background: rgba(255, 255, 255, 0.5);
+      border-block: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(9, 43, 99, 0.07);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      display: block;
+      width: 130px;
+      height: auto;
+    }
+
+    header > a { position: relative; z-index: 1; flex: 0 0 130px; }
+
+    .header-title {
+      margin: 0;
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+      color: var(--navy);
+      font-size: clamp(1.2rem, 3vw, 1.65rem);
+      letter-spacing: -0.02em;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 42px 24px 72px;
+    }
+
+    .intro { display: none; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(101, 185, 46, 0.14);
+    }
+
+    h1 {
+      max-width: 520px;
+      margin: 0 0 18px;
+      font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      color: var(--navy);
+    }
+
+    .lead {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    .contact-note {
+      margin-top: 32px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--green);
+      border-radius: 0 12px 12px 0;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .contact-note strong { color: var(--ink); }
+    a { color: var(--blue); font-weight: 700; }
+
+    .card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid rgba(217, 226, 237, 0.88);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: 0 24px 70px rgba(9, 43, 99, 0.11);
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      color: var(--navy);
+      font-size: 1.45rem;
+    }
+
+    .required-note {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hidden { display: none !important; }
+
+    .status {
+      margin: 0 0 20px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .status.error { color: #8d251f; background: #fff0ee; border: 1px solid #ffc9c3; }
+    .status.success { color: #216428; background: #effaef; border: 1px solid #bde6c0; }
+
+    .signed-in-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f0f6fc;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .signed-in-bar strong { display: block; color: var(--ink); }
+
+    .text-button {
+      width: auto;
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      color: var(--blue);
+      background: transparent;
+      border: 1px solid #b9d3eb;
+      box-shadow: none;
+      font-size: 0.82rem;
+    }
+
+    .text-button:hover { box-shadow: none; background: #fff; }
+
+    .form-actions { display: flex; align-items: center; gap: 16px; }
+    .form-actions button { flex: 1; }
+
+    .forgot-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.86rem;
+    }
+
+    .portal-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 26px;
+      padding: 5px;
+      border-radius: 13px;
+      background: #edf3f9;
+    }
+
+    .portal-tab {
+      padding: 10px 12px;
+      color: var(--muted);
+      background: transparent;
+      border-radius: 9px;
+      box-shadow: none;
+      font-size: 0.88rem;
+    }
+
+    .portal-tab:hover { transform: none; box-shadow: none; }
+    .portal-tab.active { color: var(--navy); background: #fff; box-shadow: 0 3px 10px rgba(9, 43, 99, 0.08); }
+
+    .ticket-list { display: grid; gap: 12px; }
+
+    .ticket-item {
+      width: 100%;
+      display: block;
+      padding: 16px;
+      color: var(--ink);
+      background: #fbfdff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: none;
+      text-align: left;
+    }
+
+    .ticket-item:hover { transform: translateY(-1px); border-color: #a9c5df; box-shadow: 0 7px 18px rgba(9, 43, 99, 0.08); }
+    .ticket-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; color: var(--muted); font-size: 0.78rem; }
+    .ticket-subject { margin: 0 0 5px; color: var(--navy); font-weight: 800; }
+    .ticket-product { color: var(--muted); font-size: 0.82rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #174d7a;
+      background: #e8f3fd;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .badge.closed, .badge.resolved { color: #4c596a; background: #edf0f3; }
+    .badge.waiting_on_customer { color: #7a4d0a; background: #fff3d9; }
+    .empty-state { padding: 34px 12px; color: var(--muted); text-align: center; }
+
+    .detail-header { margin-bottom: 20px; }
+    .detail-topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .back-button { width: auto; padding: 7px 10px; color: var(--blue); background: transparent; border: 0; box-shadow: none; }
+    .back-button:hover { transform: none; box-shadow: none; background: #f0f6fc; }
+    .detail-header h2 { margin-bottom: 8px; }
+    .ticket-description { margin: 18px 0 24px; padding: 15px; border-radius: 12px; background: #f7fafc; white-space: pre-wrap; line-height: 1.55; }
+
+    .timeline { display: grid; gap: 12px; margin: 18px 0 24px; }
+    .comment { padding: 14px 16px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdff; }
+    .comment.staff { border-left: 4px solid var(--blue); background: #f2f8fe; }
+    .comment-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; font-size: 0.78rem; color: var(--muted); }
+    .comment-head strong { color: var(--ink); }
+    .comment p { margin: 0; white-space: pre-wrap; line-height: 1.5; }
+
+    .attachment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 12px; }
+    .attachment-grid a { display: block; }
+    .attachment-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--line); border-radius: 9px; }
+    .upload-input { padding: 10px; background: #fff; }
+    .drop-zone {
+      padding: 22px 16px;
+      border: 2px dashed #b9cde0;
+      border-radius: 13px;
+      background: #f8fbfe;
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .16s, background .16s, box-shadow .16s;
+    }
+    .drop-zone strong { display: block; margin-bottom: 4px; color: var(--navy); }
+    .drop-zone span { font-size: .82rem; }
+    .drop-zone:hover, .drop-zone.dragging, .drop-zone:focus { outline: 0; border-color: var(--blue); background: #eef7ff; box-shadow: 0 0 0 4px var(--focus); }
+    .drop-zone input { display: none; }
+    .file-preview { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 10px; }
+    .file-chip { max-width: 180px; padding: 5px 8px; overflow: hidden; border-radius: 7px; color: #31506d; background: #e5f0fa; font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+    .reply-box { padding-top: 20px; border-top: 1px solid var(--line); }
+    .reply-box textarea { min-height: 100px; }
+    .danger-button { margin-top: 14px; color: #9b2c27; background: transparent; border: 1px solid #e8b4b0; box-shadow: none; }
+    .danger-button:hover { box-shadow: none; background: #fff4f3; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field { margin-bottom: 19px; }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #263650;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 12px 14px;
+      color: var(--ink);
+      background: #fbfdff;
+      font: inherit;
+      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .hint {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 20px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--navy));
+      box-shadow: 0 10px 24px rgba(13, 115, 206, 0.24);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.16s, box-shadow 0.16s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 13px 28px rgba(13, 115, 206, 0.3);
+    }
+
+    button:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+
+    footer {
+      padding: 0 24px 30px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      header { height: 54px; margin-block: 24px 30px; padding: 0 16px; }
+      header > a { flex-basis: 105px; }
+      .logo { width: 105px; }
+      main { padding-top: 12px; }
+      .intro { padding-top: 8px; }
+      .lead { max-width: 650px; }
+    }
+
+    @media (max-width: 540px) {
+      main { padding-inline: 16px; }
+      header { padding-inline: 16px; }
+      .row { grid-template-columns: 1fr; gap: 0; }
+      .card { border-radius: 18px; padding: 22px 18px; }
+      .attachment-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" aria-label="GeorgeTech home">
+      <img class="logo" src="assets/images/GeorgeTech%20Logo.png" alt="GeorgeTech">
+    </a>
+    <h1 class="header-title">Support Centre</h1>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">GeorgeTech support</p>
+      <h1 id="page-title">How can we help?</h1>
+      <p class="lead">Sign in, tell us what happened, and include as much detail as you can. You’ll receive a ticket reference as soon as your request is recorded.</p>
+
+      <div class="contact-note">
+        <strong>Prefer email?</strong><br>
+        Contact us directly at <a href="mailto:support@georgetech.uk">support@georgetech.uk</a>.
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <div id="status" class="status hidden" role="status"></div>
+
+      <div id="loading-section">
+        <h2>Loading support…</h2>
+      </div>
+
+      <div id="login-section" class="hidden">
+        <h2>Sign in to support</h2>
+        <p class="required-note">Use your GeorgeTech account to submit and track support requests.</p>
+        <form id="login-form">
+          <div class="field">
+            <label for="login-email">Email address *</label>
+            <input id="login-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Password *</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <button id="login-button" type="submit">Sign in</button>
+          <a class="forgot-link" href="#" id="forgot-password">Forgot your password?</a>
+        </form>
+      </div>
+
+      <div id="ticket-section" class="hidden">
+        <div class="signed-in-bar">
+          <div>Signed in as <strong id="user-email"></strong></div>
+          <button class="text-button" id="logout-button" type="button">Sign out</button>
+        </div>
+        <nav class="portal-tabs" aria-label="Support sections">
+          <button class="portal-tab active" type="button" data-panel="tickets-panel">My tickets</button>
+          <button class="portal-tab" type="button" data-panel="new-ticket-panel">New request</button>
+        </nav>
+
+        <div id="tickets-panel">
+          <div id="ticket-list-view">
+            <h2>My tickets</h2>
+            <p class="required-note">View updates and continue a conversation with support.</p>
+            <div id="ticket-list" class="ticket-list"></div>
+          </div>
+          <div id="ticket-detail" class="hidden">
+            <div class="detail-topline">
+              <button id="back-to-tickets" class="back-button" type="button">← All tickets</button>
+              <span id="detail-status" class="badge"></span>
+            </div>
+            <header class="detail-header">
+              <h2 id="detail-subject"></h2>
+              <span id="detail-reference" class="ticket-product"></span>
+            </header>
+            <div id="detail-description" class="ticket-description"></div>
+            <h2>Conversation</h2>
+            <div id="comment-timeline" class="timeline"></div>
+            <div id="ticket-attachments" class="attachment-grid"></div>
+            <form id="reply-form" class="reply-box">
+              <div class="field">
+                <label for="reply-body">Add a comment</label>
+                <textarea id="reply-body" name="body" maxlength="5000" placeholder="Write a reply…" required></textarea>
+              </div>
+              <div class="field">
+                <label for="reply-files">Add screenshots (optional)</label>
+                <div class="drop-zone" data-input="reply-files" tabindex="0" role="button" aria-label="Add reply screenshots">
+                  <strong>Drop screenshots here</strong>
+                  <span>Click to browse or paste an image with Ctrl/Cmd+V</span>
+                  <input id="reply-files" name="screenshots" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+                  <div class="file-preview" aria-live="polite"></div>
+                </div>
+                <span class="hint">PNG, JPG, WebP or GIF. Up to 5 MB each.</span>
+              </div>
+              <button id="reply-button" type="submit">Send comment</button>
+            </form>
+            <button id="close-ticket-button" class="danger-button" type="button">Close this request</button>
+          </div>
+        </div>
+
+        <div id="new-ticket-panel" class="hidden">
+        <h2 id="form-title">Submit a report</h2>
+        <p class="required-note">All fields marked with * are required.</p>
+
+        <form id="support-form">
+        <div class="row">
+          <div class="field">
+            <label for="name">Your name *</label>
+            <input id="name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email address *</label>
+            <input id="email" name="email" type="email" autocomplete="email" readonly required>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="product">Product or service *</label>
+            <select id="product" name="product" required>
+              <option value="" selected disabled>Select a product</option>
+              <option>GeorgeTech Extractor</option>
+              <option>OrchardOps</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="category">Report type *</label>
+            <select id="category" name="category" required>
+              <option value="" selected disabled>Select a type</option>
+              <option>Technical issue</option>
+              <option>Account or login</option>
+              <option>Feature request</option>
+              <option>Billing</option>
+              <option>Privacy or data</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="subject">Subject *</label>
+          <input id="subject" name="subject" type="text" maxlength="120" placeholder="A short summary of the issue" required>
+        </div>
+
+        <div class="field">
+          <label for="details">What happened? *</label>
+          <textarea id="details" name="details" maxlength="10000" placeholder="What were you trying to do, what happened, and what did you expect instead?" required></textarea>
+          <div class="field">
+            <label for="ticket-files">Screenshots (optional)</label>
+            <div class="drop-zone" data-input="ticket-files" tabindex="0" role="button" aria-label="Add ticket screenshots">
+              <strong>Drop screenshots here</strong>
+              <span>Click to browse or paste an image with Ctrl/Cmd+V</span>
+              <input id="ticket-files" name="screenshots" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+              <div class="file-preview" aria-live="polite"></div>
+            </div>
+            <span class="hint">PNG, JPG, WebP or GIF. Up to 5 MB each.</span>
+          </div>
+          <span class="hint">Please don’t include passwords or other sensitive information.</span>
+        </div>
+
+          <button id="submit-button" type="submit">Submit support request <span aria-hidden="true">→</span></button>
+        </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>&copy; 2026 GeorgeTech. All rights reserved.</footer>
+
+  <script type="text/plain" data-replaced="support-portal-v2">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const supabase = createClient(
+      "https://lgchqleltppfdgtpgsbj.supabase.co",
+      "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
+    );
+
+    const loadingSection = document.getElementById("loading-section");
+    const loginSection = document.getElementById("login-section");
+    const ticketSection = document.getElementById("ticket-section");
+    const loginForm = document.getElementById("login-form");
+    const supportForm = document.getElementById("support-form");
+    const loginButton = document.getElementById("login-button");
+    const submitButton = document.getElementById("submit-button");
+    const status = document.getElementById("status");
+    let currentUser = null;
+
+    function showStatus(message, type = "error") {
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+
+    function clearStatus() {
+      status.textContent = "";
+      status.className = "status hidden";
+    }
+
+    function showSession(session) {
+      currentUser = session?.user || null;
+      loadingSection.classList.add("hidden");
+      loginSection.classList.toggle("hidden", Boolean(currentUser));
+      ticketSection.classList.toggle("hidden", !currentUser);
+
+      if (currentUser) {
+        document.getElementById("user-email").textContent = currentUser.email;
+        document.getElementById("email").value = currentUser.email || "";
+        document.getElementById("name").value = currentUser.user_metadata?.full_name || "";
+      }
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in…";
+
+      const data = new FormData(loginForm);
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
+        email: data.get("email"),
+        password: data.get("password")
+      });
+
+      loginButton.disabled = false;
+      loginButton.textContent = "Sign in";
+      if (error) return showStatus(error.message);
+      loginForm.reset();
+      clearStatus();
+      showSession(authData.session);
+    });
+
+    document.getElementById("forgot-password").addEventListener("click", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      const email = document.getElementById("login-email").value.trim();
+      if (!email) return showStatus("Enter your email address first, then select ‘Forgot your password?’. ");
+
+      const redirectTo = `${window.location.origin}/password-reset.html`;
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+      if (error) return showStatus(error.message);
+      showStatus("Password reset email sent. Check your inbox.", "success");
+    });
+
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      clearStatus();
+      await supabase.auth.signOut();
+      supportForm.reset();
+      showSession(null);
+    });
+
+    supportForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      if (!supportForm.reportValidity() || !currentUser) return;
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting…";
+      const formData = new FormData(supportForm);
+      const { data, error } = await supabase
+        .from("support_tickets")
+        .insert({
+          user_id: currentUser.id,
+          requester_name: formData.get("name"),
+          requester_email: currentUser.email,
+          product: formData.get("product"),
+          category: formData.get("category"),
+          subject: formData.get("subject"),
+          description: formData.get("details")
+        })
+        .select("ticket_number")
+        .single();
+
+      submitButton.disabled = false;
+      submitButton.innerHTML = 'Submit support request <span aria-hidden="true">→</span>';
+
+      if (error) {
+        console.error(error);
+        return showStatus("We couldn’t submit your request. Please try again or email support@georgetech.uk.");
+      }
+
+      supportForm.reset();
+      document.getElementById("email").value = currentUser.email || "";
+      document.getElementById("name").value = currentUser.user_metadata?.full_name || "";
+      showStatus(`Your request has been submitted. Ticket reference: ${data.ticket_number}.`, "success");
+      status.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    const { data: { session } } = await supabase.auth.getSession();
+    showSession(session);
+    supabase.auth.onAuthStateChange((_event, newSession) => showSession(newSession));
+  </script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const supabase = createClient(
+      "https://lgchqleltppfdgtpgsbj.supabase.co",
+      "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
+    );
+
+    const byId = (id) => document.getElementById(id);
+    const loadingSection = byId("loading-section");
+    const loginSection = byId("login-section");
+    const ticketSection = byId("ticket-section");
+    const loginForm = byId("login-form");
+    const supportForm = byId("support-form");
+    const replyForm = byId("reply-form");
+    const statusBox = byId("status");
+    let currentUser = null;
+    let selectedTicket = null;
+
+    function showStatus(message, type = "error") {
+      statusBox.textContent = message;
+      statusBox.className = `status ${type}`;
+    }
+
+    function clearStatus() {
+      statusBox.textContent = "";
+      statusBox.className = "status hidden";
+    }
+
+    function formatDate(value) {
+      return new Intl.DateTimeFormat("en-GB", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }).format(new Date(value));
+    }
+
+    function statusLabel(value) {
+      return value.replaceAll("_", " ");
+    }
+
+    function setPanel(panelId) {
+      document.querySelectorAll(".portal-tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.panel === panelId);
+      });
+      byId("tickets-panel").classList.toggle("hidden", panelId !== "tickets-panel");
+      byId("new-ticket-panel").classList.toggle("hidden", panelId !== "new-ticket-panel");
+      clearStatus();
+      if (panelId === "tickets-panel") loadTickets();
+    }
+
+    function validateFiles(files) {
+      const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+      for (const file of files) {
+        if (!allowed.includes(file.type)) throw new Error(`${file.name} is not a supported image.`);
+        if (file.size > 5 * 1024 * 1024) throw new Error(`${file.name} is larger than 5 MB.`);
+      }
+    }
+
+    function setupDropZones() {
+      document.querySelectorAll(".drop-zone").forEach((zone) => {
+        const input = byId(zone.dataset.input);
+        const preview = zone.querySelector(".file-preview");
+
+        const setFiles = (incoming, append = true) => {
+          const files = append ? [...input.files, ...incoming] : [...incoming];
+          const unique = files.filter((file, index, all) =>
+            all.findIndex((candidate) => candidate.name === file.name && candidate.size === file.size && candidate.lastModified === file.lastModified) === index
+          );
+          try { validateFiles(unique); }
+          catch (error) { showStatus(error.message); return; }
+          const transfer = new DataTransfer();
+          unique.forEach((file) => transfer.items.add(file));
+          input.files = transfer.files;
+          preview.replaceChildren(...unique.map((file) => {
+            const chip = document.createElement("span");
+            chip.className = "file-chip";
+            chip.textContent = file.name;
+            chip.title = file.name;
+            return chip;
+          }));
+        };
+
+        zone.addEventListener("click", (event) => {
+          if (event.target !== input) input.click();
+        });
+        zone.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); input.click(); }
+        });
+        input.addEventListener("change", () => setFiles(input.files, false));
+        ["dragenter", "dragover"].forEach((name) => zone.addEventListener(name, (event) => {
+          event.preventDefault(); zone.classList.add("dragging");
+        }));
+        ["dragleave", "drop"].forEach((name) => zone.addEventListener(name, (event) => {
+          event.preventDefault(); zone.classList.remove("dragging");
+        }));
+        zone.addEventListener("drop", (event) => setFiles(event.dataTransfer.files));
+        zone.addEventListener("paste", (event) => {
+          const pasted = [...event.clipboardData.items]
+            .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
+            .map((item, index) => {
+              const blob = item.getAsFile();
+              const extension = blob.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
+              return new File([blob], `pasted-screenshot-${Date.now()}-${index + 1}.${extension}`, { type: blob.type });
+            });
+          if (pasted.length) { event.preventDefault(); setFiles(pasted); }
+        });
+      });
+    }
+
+    async function uploadFiles(files, ticketId, commentId = null) {
+      const selectedFiles = Array.from(files || []);
+      validateFiles(selectedFiles);
+
+      for (const file of selectedFiles) {
+        const extension = file.name.split(".").pop()?.toLowerCase() || "image";
+        const path = `${currentUser.id}/${ticketId}/${crypto.randomUUID()}.${extension}`;
+        const { error: uploadError } = await supabase.storage
+          .from("support-attachments")
+          .upload(path, file, { contentType: file.type, upsert: false });
+        if (uploadError) throw uploadError;
+
+        const { error: recordError } = await supabase.from("support_ticket_attachments").insert({
+          ticket_id: ticketId,
+          comment_id: commentId,
+          uploaded_by: currentUser.id,
+          storage_path: path,
+          file_name: file.name,
+          mime_type: file.type,
+          file_size: file.size
+        });
+        if (recordError) throw recordError;
+      }
+    }
+
+    async function loadTickets() {
+      const list = byId("ticket-list");
+      list.innerHTML = '<div class="empty-state">Loading tickets…</div>';
+      const { data, error } = await supabase
+        .from("support_tickets")
+        .select("id,ticket_number,subject,product,status,created_at,updated_at,description")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        list.innerHTML = '<div class="empty-state">Tickets could not be loaded.</div>';
+        return showStatus("We couldn’t load your tickets. Please try again.");
+      }
+
+      if (!data.length) {
+        list.innerHTML = '<div class="empty-state">You don’t have any support tickets yet.</div>';
+        return;
+      }
+
+      list.replaceChildren(...data.map((ticket) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "ticket-item";
+        const meta = document.createElement("div");
+        meta.className = "ticket-meta";
+        const reference = document.createElement("span");
+        reference.textContent = `${ticket.ticket_number} · ${formatDate(ticket.created_at)}`;
+        const badge = document.createElement("span");
+        badge.className = `badge ${ticket.status}`;
+        badge.textContent = statusLabel(ticket.status);
+        meta.append(reference, badge);
+        const subject = document.createElement("p");
+        subject.className = "ticket-subject";
+        subject.textContent = ticket.subject;
+        const product = document.createElement("span");
+        product.className = "ticket-product";
+        product.textContent = ticket.product;
+        button.append(meta, subject, product);
+        button.addEventListener("click", () => openTicket(ticket));
+        return button;
+      }));
+    }
+
+    async function openTicket(ticket) {
+      selectedTicket = ticket;
+      clearStatus();
+      byId("ticket-list-view").classList.add("hidden");
+      byId("ticket-detail").classList.remove("hidden");
+      byId("detail-subject").textContent = ticket.subject;
+      byId("detail-reference").textContent = `${ticket.ticket_number} · ${ticket.product} · Opened ${formatDate(ticket.created_at)}`;
+      byId("detail-description").textContent = ticket.description;
+      const badge = byId("detail-status");
+      badge.className = `badge ${ticket.status}`;
+      badge.textContent = statusLabel(ticket.status);
+      const isClosed = ticket.status === "closed";
+      replyForm.classList.toggle("hidden", isClosed);
+      byId("close-ticket-button").classList.toggle("hidden", isClosed);
+      await loadConversation(ticket.id);
+    }
+
+    async function loadConversation(ticketId) {
+      const timeline = byId("comment-timeline");
+      const gallery = byId("ticket-attachments");
+      timeline.innerHTML = '<div class="empty-state">Loading conversation…</div>';
+      gallery.replaceChildren();
+
+      const [commentsResult, attachmentsResult] = await Promise.all([
+        supabase.from("support_ticket_comments").select("id,author_type,author_name,body,created_at").eq("ticket_id", ticketId).order("created_at"),
+        supabase.from("support_ticket_attachments").select("id,comment_id,storage_path,file_name").eq("ticket_id", ticketId).order("created_at")
+      ]);
+
+      if (commentsResult.error || attachmentsResult.error) {
+        timeline.innerHTML = '<div class="empty-state">Conversation could not be loaded.</div>';
+        return;
+      }
+
+      const comments = commentsResult.data;
+      timeline.replaceChildren(...comments.map((comment) => {
+        const item = document.createElement("article");
+        item.className = `comment ${comment.author_type}`;
+        const head = document.createElement("div");
+        head.className = "comment-head";
+        const author = document.createElement("strong");
+        author.textContent = comment.author_type === "staff" ? `${comment.author_name} · GeorgeTech` : comment.author_name;
+        const date = document.createElement("span");
+        date.textContent = formatDate(comment.created_at);
+        const body = document.createElement("p");
+        body.textContent = comment.body;
+        head.append(author, date);
+        item.append(head, body);
+        return item;
+      }));
+
+      if (!comments.length) {
+        timeline.innerHTML = '<div class="empty-state">No comments yet. We’ll post updates here.</div>';
+      }
+
+      for (const attachment of attachmentsResult.data) {
+        const { data } = await supabase.storage
+          .from("support-attachments")
+          .createSignedUrl(attachment.storage_path, 3600);
+        if (!data?.signedUrl) continue;
+        const link = document.createElement("a");
+        link.href = data.signedUrl;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.title = attachment.file_name;
+        const image = document.createElement("img");
+        image.src = data.signedUrl;
+        image.alt = attachment.file_name;
+        image.loading = "lazy";
+        link.append(image);
+        gallery.append(link);
+      }
+    }
+
+    async function showSession(session) {
+      currentUser = session?.user || null;
+      loadingSection.classList.add("hidden");
+      if (!currentUser) return window.location.replace("support.html");
+      loginSection.classList.add("hidden");
+      ticketSection.classList.remove("hidden");
+      byId("user-email").textContent = currentUser.email;
+      byId("email").value = currentUser.email || "";
+      byId("name").value = currentUser.user_metadata?.full_name || "";
+      setPanel("tickets-panel");
+    }
+
+    document.querySelectorAll(".portal-tab").forEach((tab) => {
+      tab.addEventListener("click", () => setPanel(tab.dataset.panel));
+    });
+
+    [supportForm, replyForm].forEach((form) => {
+      form.addEventListener("reset", () => {
+        window.setTimeout(() => form.querySelectorAll(".file-preview").forEach((preview) => preview.replaceChildren()), 0);
+      });
+    });
+
+    byId("back-to-tickets").addEventListener("click", () => {
+      selectedTicket = null;
+      byId("ticket-detail").classList.add("hidden");
+      byId("ticket-list-view").classList.remove("hidden");
+      loadTickets();
+    });
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      const button = byId("login-button");
+      button.disabled = true;
+      button.textContent = "Signing in…";
+      const values = new FormData(loginForm);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: values.get("email"),
+        password: values.get("password")
+      });
+      button.disabled = false;
+      button.textContent = "Sign in";
+      if (error) return showStatus(error.message);
+      loginForm.reset();
+      showSession(data.session);
+    });
+
+    byId("forgot-password").addEventListener("click", async (event) => {
+      event.preventDefault();
+      const email = byId("login-email").value.trim();
+      if (!email) return showStatus("Enter your email address first.");
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/password-reset.html`
+      });
+      if (error) return showStatus(error.message);
+      showStatus("Password reset email sent. Check your inbox.", "success");
+    });
+
+    byId("logout-button").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.replace("support.html");
+    });
+
+    supportForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      if (!supportForm.reportValidity() || !currentUser) return;
+      const files = byId("ticket-files").files;
+      try { validateFiles(files); } catch (error) { return showStatus(error.message); }
+
+      const button = byId("submit-button");
+      button.disabled = true;
+      button.textContent = "Submitting…";
+      const values = new FormData(supportForm);
+      const { data, error } = await supabase.from("support_tickets").insert({
+        user_id: currentUser.id,
+        requester_name: values.get("name"),
+        requester_email: currentUser.email,
+        product: values.get("product"),
+        category: values.get("category"),
+        subject: values.get("subject"),
+        description: values.get("details")
+      }).select("id,ticket_number").single();
+
+      if (error) {
+        button.disabled = false;
+        button.textContent = "Submit support request →";
+        return showStatus("We couldn’t submit your request. Please try again.");
+      }
+
+      try {
+        await uploadFiles(files, data.id);
+      } catch (uploadError) {
+        console.error(uploadError);
+        showStatus(`Ticket ${data.ticket_number} was created, but one or more screenshots could not be uploaded.`, "error");
+      }
+
+      supportForm.reset();
+      byId("email").value = currentUser.email || "";
+      byId("name").value = currentUser.user_metadata?.full_name || "";
+      button.disabled = false;
+      button.textContent = "Submit support request →";
+      if (statusBox.classList.contains("hidden")) showStatus(`Ticket ${data.ticket_number} was submitted.`, "success");
+      setTimeout(() => setPanel("tickets-panel"), 900);
+    });
+
+    replyForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearStatus();
+      if (!selectedTicket || !replyForm.reportValidity()) return;
+      const files = byId("reply-files").files;
+      try { validateFiles(files); } catch (error) { return showStatus(error.message); }
+      const button = byId("reply-button");
+      button.disabled = true;
+      button.textContent = "Sending…";
+      const body = new FormData(replyForm).get("body");
+      const authorName = currentUser.user_metadata?.full_name || currentUser.email;
+      const { data, error } = await supabase.from("support_ticket_comments").insert({
+        ticket_id: selectedTicket.id,
+        author_id: currentUser.id,
+        author_type: "customer",
+        author_name: authorName,
+        body
+      }).select("id").single();
+
+      if (error) {
+        button.disabled = false;
+        button.textContent = "Send comment";
+        return showStatus("Your comment could not be sent.");
+      }
+
+      try { await uploadFiles(files, selectedTicket.id, data.id); }
+      catch (uploadError) { showStatus("Your comment was sent, but a screenshot could not be uploaded."); }
+      replyForm.reset();
+      button.disabled = false;
+      button.textContent = "Send comment";
+      await loadConversation(selectedTicket.id);
+    });
+
+    byId("close-ticket-button").addEventListener("click", async () => {
+      if (!selectedTicket || !window.confirm("Close this support request? You won’t be able to add more comments.")) return;
+      const { data, error } = await supabase.rpc("close_own_support_ticket", {
+        target_ticket_id: selectedTicket.id
+      });
+      if (error || !data) return showStatus("This ticket could not be closed.");
+      selectedTicket.status = "closed";
+      showStatus(`${selectedTicket.ticket_number} has been closed.`, "success");
+      openTicket(selectedTicket);
+    });
+
+    setupDropZones();
+    const { data: { session } } = await supabase.auth.getSession();
+    showSession(session);
+    supabase.auth.onAuthStateChange((_event, nextSession) => showSession(nextSession));
+  </script>
+</body>
+</html>
