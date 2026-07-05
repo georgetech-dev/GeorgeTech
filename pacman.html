@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Pacman</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    #game {
+      display: grid;
+      grid-template-columns: repeat(15, 20px);
+      grid-template-rows: repeat(15, 20px);
+      gap: 0;
+      border: 2px solid #fff;
+    }
+
+    .cell {
+      width: 20px;
+      height: 20px;
+      box-sizing: border-box;
+    }
+
+    .wall {
+      background: #0033cc;
+    }
+
+    .dot {
+      background: #000;
+      position: relative;
+    }
+
+    .dot::after {
+      content: "";
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .empty {
+      background: #000;
+    }
+
+    .pacman {
+      background: yellow;
+      border-radius: 50%;
+    }
+
+    .ghost {
+      background: red;
+      border-radius: 4px;
+    }
+
+    #info {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simple Pacman</h1>
+  <div id="game"></div>
+  <div id="info">Use arrow keys to move. Eat all dots, avoid the ghost.</div>
+
+  <script>
+    // 0 = wall, 1 = dot, 2 = empty
+    const layout = [
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+      [0,1,1,1,0,1,1,1,1,1,0,1,1,1,0],
+      [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+      [0,1,1,1,0,1,1,2,1,1,0,1,1,1,0],
+      [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],
+      [0,1,1,1,0,1,1,1,1,1,0,1,1,1,0],
+      [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
+      [0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+      [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ];
+
+    const rows = layout.length;
+    const cols = layout[0].length;
+    const game = document.getElementById('game');
+
+    let pacmanPos = { x: 7, y: 7 };   // start in middle
+    let ghostPos  = { x: 1, y: 1 };   // simple ghost
+    let cells = [];
+    let dotsLeft = 0;
+    let gameOver = false;
+
+    function createBoard() {
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          if (layout[y][x] === 0) {
+            cell.classList.add('wall');
+          } else if (layout[y][x] === 1) {
+            cell.classList.add('dot');
+            dotsLeft++;
+          } else {
+            cell.classList.add('empty');
+          }
+          game.appendChild(cell);
+          cells.push(cell);
+        }
+      }
+      drawCharacters();
+    }
+
+    function index(x, y) {
+      return y * cols + x;
+    }
+
+    function drawCharacters() {
+      // clear previous
+      cells.forEach(c => {
+        c.classList.remove('pacman');
+        c.classList.remove('ghost');
+      });
+      // draw pacman
+      cells[index(pacmanPos.x, pacmanPos.y)].classList.add('pacman');
+      // draw ghost
+      cells[index(ghostPos.x, ghostPos.y)].classList.add('ghost');
+    }
+
+    function canMove(x, y) {
+      if (x < 0 || y < 0 || x >= cols || y >= rows) return false;
+      return layout[y][x] !== 0;
+    }
+
+    function movePacman(dx, dy) {
+      if (gameOver) return;
+      const nx = pacmanPos.x + dx;
+      const ny = pacmanPos.y + dy;
+      if (!canMove(nx, ny)) return;
+
+      pacmanPos.x = nx;
+      pacmanPos.y = ny;
+
+      // eat dot
+      if (layout[ny][nx] === 1) {
+        layout[ny][nx] = 2;
+        const c = cells[index(nx, ny)];
+        c.classList.remove('dot');
+        c.classList.add('empty');
+        dotsLeft--;
+        if (dotsLeft === 0) {
+          document.getElementById('info').textContent = 'You win! All dots eaten.';
+          gameOver = true;
+        }
+      }
+
+      checkCollision();
+      drawCharacters();
+    }
+
+    function moveGhost() {
+      if (gameOver) return;
+      // simple chase: try to reduce distance
+      const options = [
+        { dx: 1, dy: 0 },
+        { dx: -1, dy: 0 },
+        { dx: 0, dy: 1 },
+        { dx: 0, dy: -1 }
+      ];
+
+      let best = { dist: Infinity, x: ghostPos.x, y: ghostPos.y };
+
+      options.forEach(o => {
+        const nx = ghostPos.x + o.dx;
+        const ny = ghostPos.y + o.dy;
+        if (!canMove(nx, ny)) return;
+        const dist = Math.abs(nx - pacmanPos.x) + Math.abs(ny - pacmanPos.y);
+        if (dist < best.dist) {
+          best = { dist, x: nx, y: ny };
+        }
+      });
+
+      ghostPos.x = best.x;
+      ghostPos.y = best.y;
+
+      checkCollision();
+      drawCharacters();
+    }
+
+    function checkCollision() {
+      if (pacmanPos.x === ghostPos.x && pacmanPos.y === ghostPos.y) {
+        document.getElementById('info').textContent = 'Game over! The ghost got you.';
+        gameOver = true;
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowUp':
+          movePacman(0, -1);
+          break;
+        case 'ArrowDown':
+          movePacman(0, 1);
+          break;
+        case 'ArrowLeft':
+          movePacman(-1, 0);
+          break;
+        case 'ArrowRight':
+          movePacman(1, 0);
+          break;
+      }
+    });
+
+    createBoard();
+    setInterval(moveGhost, 400); // ghost moves every 400ms
+  </script>
+</body>
+</html>
