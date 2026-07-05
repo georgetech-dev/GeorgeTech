@@ -29,7 +29,7 @@
       background: var(--background) url("assets/images/site-background.png") center / cover fixed no-repeat;
     }
 
-    header {
+    .site-header {
       width: 100%;
       height: 64px;
       margin: 30px 0 34px;
@@ -50,7 +50,7 @@
       height: auto;
     }
 
-    header > a { position: relative; z-index: 1; flex: 0 0 130px; }
+    .site-header > a { position: relative; z-index: 1; flex: 0 0 130px; }
 
     .header-title {
       margin: 0;
@@ -253,16 +253,25 @@
     .back-button { width: auto; padding: 7px 10px; color: var(--blue); background: transparent; border: 0; box-shadow: none; }
     .back-button:hover { transform: none; box-shadow: none; background: #f0f6fc; }
     .detail-header h2 { margin-bottom: 8px; }
+    .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .meta-item { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border: 1px solid #d4e2ee; border-radius: 8px; color: #4f647a; background: #f5f9fc; font-size: .78rem; }
+    .meta-item strong { color: var(--navy); }
+    .description-title { margin: 0 0 12px !important; }
     .ticket-description { margin: 18px 0 24px; padding: 15px; border-radius: 12px; background: #f7fafc; white-space: pre-wrap; line-height: 1.55; }
 
     .timeline { display: grid; gap: 12px; margin: 18px 0 24px; }
-    .comment { padding: 14px 16px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdff; }
-    .comment.staff { border-left: 4px solid var(--blue); background: #f2f8fe; }
+    .comment { width: min(82%, 760px); padding: 14px 16px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdff; }
+    .comment.staff { margin-right: auto; border-left: 4px solid var(--blue); border-bottom-left-radius: 4px; background: #f2f8fe; }
+    .comment.customer { margin-left: auto; border-right: 4px solid var(--green); border-bottom-right-radius: 4px; background: #f3f9ef; }
+    .comment.customer .comment-head { flex-direction: row-reverse; }
+    .comment.customer p { text-align: right; }
+    .comment.customer .attachment-grid { justify-items: end; }
     .comment-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; font-size: 0.78rem; color: var(--muted); }
     .comment-head strong { color: var(--ink); }
     .comment p { margin: 0; white-space: pre-wrap; line-height: 1.5; }
 
     .attachment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 12px; }
+    #ticket-attachments:not(:empty) { margin-bottom: 28px; }
     .attachment-grid a { display: block; }
     .attachment-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--line); border-radius: 9px; }
     .upload-input { padding: 10px; background: #fff; }
@@ -372,8 +381,8 @@
     }
 
     @media (max-width: 820px) {
-      header { height: 54px; margin-block: 24px 30px; padding: 0 16px; }
-      header > a { flex-basis: 105px; }
+      .site-header { height: 54px; margin-block: 24px 30px; padding: 0 16px; }
+      .site-header > a { flex-basis: 105px; }
       .logo { width: 105px; }
       main { padding-top: 12px; }
       .intro { padding-top: 8px; }
@@ -382,15 +391,16 @@
 
     @media (max-width: 540px) {
       main { padding-inline: 16px; }
-      header { padding-inline: 16px; }
+      .site-header { padding-inline: 16px; }
       .row { grid-template-columns: 1fr; gap: 0; }
       .card { border-radius: 18px; padding: 22px 18px; }
       .attachment-grid { grid-template-columns: repeat(2, 1fr); }
+      .comment { width: 92%; }
     }
   </style>
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <a href="/" aria-label="GeorgeTech home">
       <img class="logo" src="assets/images/GeorgeTech%20Logo.png" alt="GeorgeTech">
     </a>
@@ -456,12 +466,13 @@
             </div>
             <header class="detail-header">
               <h2 id="detail-subject"></h2>
-              <span id="detail-reference" class="ticket-product"></span>
+              <div id="detail-reference" class="detail-meta"></div>
             </header>
+            <h2 id="detail-description-title" class="description-title hidden"></h2>
             <div id="detail-description" class="ticket-description"></div>
+            <div id="ticket-attachments" class="attachment-grid"></div>
             <h2>Conversation</h2>
             <div id="comment-timeline" class="timeline"></div>
-            <div id="ticket-attachments" class="attachment-grid"></div>
             <form id="reply-form" class="reply-box">
               <div class="field">
                 <label for="reply-body">Add a comment</label>
@@ -857,7 +868,28 @@
       byId("ticket-detail").classList.remove("hidden");
       byId("detail-subject").textContent = ticket.subject;
       byId("detail-reference").textContent = `${ticket.ticket_number} · ${ticket.product} · Opened ${formatDate(ticket.created_at)}`;
-      byId("detail-description").textContent = ticket.description;
+      const detailMeta = byId("detail-reference");
+      detailMeta.replaceChildren(...[
+        ["Ticket", ticket.ticket_number],
+        ["App", ticket.product],
+        ["Opened", formatDate(ticket.created_at)]
+      ].map(([label, value]) => {
+        const item = document.createElement("span");
+        item.className = "meta-item";
+        const labelElement = document.createElement("strong");
+        labelElement.textContent = `${label}:`;
+        item.append(labelElement, document.createTextNode(value));
+        return item;
+      }));
+
+      const descriptionLines = ticket.description.split(/\r?\n/);
+      const firstContentLine = descriptionLines.findIndex((line) => line.trim());
+      const descriptionTitle = byId("detail-description-title");
+      const hasReportTitle = firstContentLine >= 0 && /^In-App Bug Report:?$/i.test(descriptionLines[firstContentLine].trim());
+      descriptionTitle.textContent = hasReportTitle ? descriptionLines[firstContentLine].trim().replace(/:$/, "") : "";
+      descriptionTitle.classList.toggle("hidden", !hasReportTitle);
+      if (hasReportTitle) descriptionLines.splice(firstContentLine, 1);
+      byId("detail-description").textContent = descriptionLines.join("\n").trim();
       const badge = byId("detail-status");
       badge.className = `badge ${ticket.status}`;
       badge.textContent = statusLabel(ticket.status);
@@ -884,6 +916,28 @@
       }
 
       const comments = commentsResult.data;
+      const attachments = (await Promise.all(attachmentsResult.data.map(async (attachment) => {
+        const { data } = await supabase.storage
+          .from("support-attachments")
+          .createSignedUrl(attachment.storage_path, 3600);
+        return data?.signedUrl ? { ...attachment, signedUrl: data.signedUrl } : null;
+      }))).filter(Boolean);
+
+      const createAttachmentLink = (attachment) => {
+        const link = document.createElement("a");
+        link.href = attachment.signedUrl;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.title = attachment.file_name;
+        const image = document.createElement("img");
+        image.src = attachment.signedUrl;
+        image.alt = attachment.file_name;
+        image.loading = "lazy";
+        link.append(image);
+        return link;
+      };
+
+      gallery.replaceChildren(...attachments.filter((attachment) => !attachment.comment_id).map(createAttachmentLink));
       timeline.replaceChildren(...comments.map((comment) => {
         const item = document.createElement("article");
         item.className = `comment ${comment.author_type}`;
@@ -897,6 +951,13 @@
         body.textContent = comment.body;
         head.append(author, date);
         item.append(head, body);
+        const commentAttachments = attachments.filter((attachment) => attachment.comment_id === comment.id);
+        if (commentAttachments.length) {
+          const commentGallery = document.createElement("div");
+          commentGallery.className = "attachment-grid";
+          commentGallery.replaceChildren(...commentAttachments.map(createAttachmentLink));
+          item.append(commentGallery);
+        }
         return item;
       }));
 
@@ -904,23 +965,6 @@
         timeline.innerHTML = '<div class="empty-state">No comments yet. We’ll post updates here.</div>';
       }
 
-      for (const attachment of attachmentsResult.data) {
-        const { data } = await supabase.storage
-          .from("support-attachments")
-          .createSignedUrl(attachment.storage_path, 3600);
-        if (!data?.signedUrl) continue;
-        const link = document.createElement("a");
-        link.href = data.signedUrl;
-        link.target = "_blank";
-        link.rel = "noopener";
-        link.title = attachment.file_name;
-        const image = document.createElement("img");
-        image.src = data.signedUrl;
-        image.alt = attachment.file_name;
-        image.loading = "lazy";
-        link.append(image);
-        gallery.append(link);
-      }
     }
 
     async function showSession(session) {
