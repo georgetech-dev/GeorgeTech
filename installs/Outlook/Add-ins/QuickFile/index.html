@@ -240,7 +240,7 @@
         </div>
         <aside class="version-card" aria-label="Current release">
           <p class="version-label">Current version</p>
-          <p class="version-value" data-version>{VERSION}</p>
+          <p class="version-value" data-version>Checking...</p>
           <p class="platform">Classic Outlook for Windows</p>
         </aside>
       </header>
@@ -279,10 +279,28 @@
       </div>
 
       <footer>
-        <span>© GeorgeTech · Version <span data-version>{VERSION}</span></span>
+        <span>© GeorgeTech · Version <span data-version>Checking...</span></span>
         <a href="/support.html">GeorgeTech Support Centre</a>
       </footer>
     </section>
   </main>
+  <script>
+    (() => {
+      const versionNodes = document.querySelectorAll("[data-version]");
+      const setVersion = (value) => {
+        const display = value || "See latest release";
+        versionNodes.forEach((node) => { node.textContent = display; });
+      };
+
+      fetch("latest.json", { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) throw new Error(`Version metadata returned ${response.status}`);
+          return response.json();
+        })
+        .then((metadata) => setVersion(metadata.version))
+        .catch(() => setVersion("See latest release"));
+    })();
+  </script>
 </body>
 </html>
+
