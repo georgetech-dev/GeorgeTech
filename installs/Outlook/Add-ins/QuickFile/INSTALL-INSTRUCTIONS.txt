@@ -1,0 +1,16 @@
+﻿GEORGETECH FOLDER MANAGER
+
+1. Extract every file from this ZIP.
+2. Close classic Outlook.
+3. Double-click Install-GeorgeTech-Folder-Manager.cmd.
+4. The installer verifies the bundled GeorgeTech certificate before trusting it.
+5. Open classic Outlook after installation.
+
+Certificate subject:
+CN=GeorgeTech
+
+Certificate thumbprint:
+DE636537103B35ED75A81CA9501BD132DCC4FE6B
+
+Support:
+https://georgetech.uk/support
