@@ -31,8 +31,8 @@
 
     .site-header {
       width: 100%;
-      height: 64px;
-      margin: 30px 0 34px;
+      height: 42px;
+      margin: 22px 0 34px;
       padding: 0 max(24px, calc((100vw - 1120px) / 2 + 24px));
       display: flex;
       align-items: center;
@@ -46,11 +46,11 @@
 
     .logo {
       display: block;
-      width: 130px;
+      width: 112px;
       height: auto;
     }
 
-    .site-header > a { position: relative; z-index: 1; flex: 0 0 130px; }
+    .site-header > a { position: relative; z-index: 1; flex: 0 0 112px; }
 
     .header-title {
       margin: 0;
@@ -154,6 +154,24 @@
     .status.error { color: #8d251f; background: #fff0ee; border: 1px solid #ffc9c3; }
     .status.success { color: #216428; background: #effaef; border: 1px solid #bde6c0; }
 
+    .access-banner {
+      margin: 0 0 22px;
+      padding: 15px 17px;
+      border: 1px solid #e6a3a0;
+      border-left: 5px solid #b3261e;
+      border-radius: 12px;
+      color: #7f1d1d;
+      background: #fff1f0;
+      line-height: 1.5;
+    }
+
+    .access-banner strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #681514;
+      font-size: .98rem;
+    }
+
     .signed-in-bar {
       display: flex;
       justify-content: space-between;
@@ -213,7 +231,48 @@
     .portal-tab:hover { transform: none; box-shadow: none; }
     .portal-tab.active { color: var(--navy); background: #fff; box-shadow: 0 3px 10px rgba(9, 43, 99, 0.08); }
 
+    .tickets-heading {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .tickets-heading h2 { margin-bottom: 3px; }
+    .tickets-heading .required-note { margin: 0; }
+
+    .ticket-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .ticket-toolbar .field { min-width: 220px; margin: 0; }
+    .ticket-toolbar label:not(.checkbox-field) { margin-bottom: 5px; font-size: .78rem; }
+    .ticket-toolbar select { padding: 9px 11px; border-radius: 10px; }
+    .checkbox-field { display: inline-flex; align-items: center; gap: 9px; margin: 0; color: var(--ink); font-size: .9rem; font-weight: 750; }
+    .checkbox-field input { width: auto; }
+
     .ticket-list { display: grid; gap: 12px; }
+
+    .ticket-group { display: grid; gap: 10px; }
+    .ticket-group + .ticket-group { margin-top: 20px; }
+    .ticket-group-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0 2px;
+      color: var(--navy);
+      font-size: .9rem;
+      font-weight: 850;
+    }
+    .ticket-group-heading::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .ticket-count { color: var(--muted); font-size: .75rem; font-weight: 800; }
 
     .ticket-item {
       width: 100%;
@@ -228,6 +287,16 @@
     }
 
     .ticket-item:hover { transform: translateY(-1px); border-color: #a9c5df; box-shadow: 0 7px 18px rgba(9, 43, 99, 0.08); }
+    .ticket-item.unread {
+      border-color: rgba(101, 185, 46, .72);
+      box-shadow: 0 0 0 0 rgba(101, 185, 46, .38), 0 10px 24px rgba(101, 185, 46, .18);
+      animation: unreadPulse 1.65s ease-in-out infinite;
+    }
+    @keyframes unreadPulse {
+      0% { box-shadow: 0 0 0 0 rgba(101, 185, 46, .34), 0 10px 24px rgba(101, 185, 46, .16); }
+      70% { box-shadow: 0 0 0 9px rgba(101, 185, 46, 0), 0 10px 24px rgba(101, 185, 46, .16); }
+      100% { box-shadow: 0 0 0 0 rgba(101, 185, 46, 0), 0 10px 24px rgba(101, 185, 46, .16); }
+    }
     .ticket-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; color: var(--muted); font-size: 0.78rem; }
     .ticket-subject { margin: 0 0 5px; color: var(--navy); font-weight: 800; }
     .ticket-product { color: var(--muted); font-size: 0.82rem; }
@@ -246,6 +315,8 @@
 
     .badge.closed, .badge.resolved { color: #4c596a; background: #edf0f3; }
     .badge.waiting_on_customer { color: #7a4d0a; background: #fff3d9; }
+    .badge.unread-pill { color: #245b14; background: #e6f6df; }
+    .ticket-badges { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
     .empty-state { padding: 34px 12px; color: var(--muted); text-align: center; }
 
     .detail-header { margin-bottom: 20px; }
@@ -381,12 +452,14 @@
     }
 
     @media (max-width: 820px) {
-      .site-header { height: 54px; margin-block: 24px 30px; padding: 0 16px; }
-      .site-header > a { flex-basis: 105px; }
-      .logo { width: 105px; }
+      .site-header { height: 40px; margin-block: 22px 30px; padding: 0 16px; }
+      .site-header > a { flex-basis: 96px; }
+      .logo { width: 96px; }
       main { padding-top: 12px; }
       .intro { padding-top: 8px; }
       .lead { max-width: 650px; }
+      .tickets-heading { align-items: flex-start; }
+      .ticket-toolbar { width: 100%; justify-content: space-between; }
     }
 
     @media (max-width: 540px) {
@@ -448,6 +521,7 @@
           <div>Signed in as <strong id="user-email"></strong></div>
           <button class="text-button" id="logout-button" type="button">Sign out</button>
         </div>
+        <div id="access-banner" class="access-banner hidden" role="alert"></div>
         <nav class="portal-tabs" aria-label="Support sections">
           <button class="portal-tab active" type="button" data-panel="tickets-panel">My tickets</button>
           <button class="portal-tab" type="button" data-panel="new-ticket-panel">New request</button>
@@ -455,8 +529,27 @@
 
         <div id="tickets-panel">
           <div id="ticket-list-view">
-            <h2>My tickets</h2>
-            <p class="required-note">View updates and continue a conversation with support.</p>
+            <div class="tickets-heading">
+              <div>
+                <h2>My tickets</h2>
+                <p class="required-note">View updates and continue a conversation with the support team.</p>
+              </div>
+              <div class="ticket-toolbar" aria-label="Ticket filters">
+                <label class="checkbox-field" for="show-closed-tickets">
+                  <input id="show-closed-tickets" type="checkbox">
+                  Show closed tickets
+                </label>
+                <div class="field">
+                  <label for="ticket-sort">View by</label>
+                  <select id="ticket-sort">
+                    <option value="date_desc">Date raised - newest first</option>
+                    <option value="date_asc">Date raised - oldest first</option>
+                    <option value="status">Status</option>
+                    <option value="product">Application</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             <div id="ticket-list" class="ticket-list"></div>
           </div>
           <div id="ticket-detail" class="hidden">
@@ -515,9 +608,6 @@
             <label for="product">Product or service *</label>
             <select id="product" name="product" required>
               <option value="" selected disabled>Select a product</option>
-              <option>GeorgeTech Extractor</option>
-              <option>OrchardOps</option>
-              <option>Other</option>
             </select>
           </div>
           <div class="field">
@@ -701,8 +791,19 @@
     const supportForm = byId("support-form");
     const replyForm = byId("reply-form");
     const statusBox = byId("status");
+    const accessBanner = byId("access-banner");
     let currentUser = null;
     let selectedTicket = null;
+    let currentProfile = null;
+    let currentTickets = [];
+    const defaultProducts = ["GeorgeTech Extractor", "Folder Manager", "SMS Portal", "Other"];
+    const statusOrder = {
+      new: 1,
+      in_progress: 2,
+      waiting_on_customer: 3,
+      resolved: 4,
+      closed: 5
+    };
 
     function showStatus(message, type = "error") {
       statusBox.textContent = message;
@@ -714,6 +815,21 @@
       statusBox.className = "status hidden";
     }
 
+    function showAccessBanner(access) {
+      if (!access || access.can_access !== false) {
+        accessBanner.classList.add("hidden");
+        accessBanner.replaceChildren();
+        return;
+      }
+
+      const title = document.createElement("strong");
+      title.textContent = access.banner_title || "Support Centre access suspended";
+      const message = document.createElement("span");
+      message.textContent = access.banner_message || "Your access is currently suspended. Please contact GeorgeTech support if you believe this is incorrect.";
+      accessBanner.replaceChildren(title, message);
+      accessBanner.classList.remove("hidden");
+    }
+
     function formatDate(value) {
       return new Intl.DateTimeFormat("en-GB", {
         dateStyle: "medium",
@@ -723,6 +839,101 @@
 
     function statusLabel(value) {
       return value.replaceAll("_", " ");
+    }
+
+    function ticketReadKey(ticket) {
+      return `georgetech-support-read:${currentUser?.id || "guest"}:${ticket.id}`;
+    }
+
+    function ticketFingerprint(ticket) {
+      return [ticket.updated_at, ticket.status].filter(Boolean).join("|");
+    }
+
+    function isTicketUnread(ticket) {
+      return window.localStorage.getItem(ticketReadKey(ticket)) !== ticketFingerprint(ticket);
+    }
+
+    function markTicketRead(ticket) {
+      window.localStorage.setItem(ticketReadKey(ticket), ticketFingerprint(ticket));
+    }
+
+    function preferredName() {
+      return currentProfile?.display_name
+        || currentProfile?.full_name
+        || currentUser?.user_metadata?.full_name
+        || currentUser?.user_metadata?.name
+        || currentUser?.email?.split("@")[0]
+        || "";
+    }
+
+    function prefillRequesterFields() {
+      byId("user-email").textContent = currentUser?.email || "";
+      byId("email").value = currentUser?.email || "";
+      byId("name").value = preferredName();
+    }
+
+    function populateProductOptions(products = defaultProducts) {
+      const select = byId("product");
+      const current = select.value;
+      const uniqueProducts = [...new Set(products.filter(Boolean))];
+      select.replaceChildren(new Option("Select a product", "", true, !current));
+      uniqueProducts.forEach((product) => select.add(new Option(product, product, false, product === current)));
+      if (current && uniqueProducts.includes(current)) select.value = current;
+    }
+
+    async function loadSupportProfile() {
+      currentProfile = null;
+      try {
+        const { data, error } = await supabase.rpc("get_my_support_profile");
+        if (!error) currentProfile = Array.isArray(data) ? data[0] : data;
+      } catch (_error) {
+        currentProfile = null;
+      }
+      prefillRequesterFields();
+    }
+
+    async function loadSupportAccess() {
+      try {
+        const { data, error } = await supabase.rpc("get_my_support_access", {
+          target_app_code: "customer_portal"
+        });
+        if (!error) {
+          showAccessBanner(Array.isArray(data) ? data[0] : data);
+          return;
+        }
+      } catch (_error) {
+        // If the migration has not reached this environment yet, keep the portal usable.
+      }
+      showAccessBanner(null);
+    }
+
+    async function loadProducts() {
+      try {
+        const { data, error } = await supabase.rpc("get_support_products");
+        if (!error && data?.length) {
+          populateProductOptions([...data.map((item) => item.name || item.product_name || item), "Other"]);
+          return;
+        }
+      } catch (_error) {
+        // Fall back below if the helper migration is not deployed yet.
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from("app_catalog")
+          .select("name")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true })
+          .order("name", { ascending: true });
+        if (!error && data?.length) {
+          populateProductOptions([...data.map((item) => item.name), "Other"]);
+          return;
+        }
+      } catch (_error) {
+        // Fall back below if app_catalog is not readable by this session.
+      }
+
+      populateProductOptions(defaultProducts);
     }
 
     function setPanel(panelId) {
@@ -832,23 +1043,61 @@
         return showStatus("We couldn’t load your tickets. Please try again.");
       }
 
-      if (!data.length) {
+      currentTickets = data || [];
+      renderTickets();
+    }
+
+    function renderTickets() {
+      const list = byId("ticket-list");
+      const showClosed = byId("show-closed-tickets").checked;
+      const sortBy = byId("ticket-sort").value;
+      const tickets = currentTickets
+        .filter((ticket) => showClosed || ticket.status !== "closed" || isTicketUnread(ticket))
+        .sort((left, right) => {
+          if (sortBy === "date_asc") return new Date(left.created_at) - new Date(right.created_at);
+          if (sortBy === "status") {
+            return (statusOrder[left.status] || 99) - (statusOrder[right.status] || 99)
+              || new Date(right.created_at) - new Date(left.created_at);
+          }
+          if (sortBy === "product") {
+            return (left.product || "").localeCompare(right.product || "")
+              || new Date(right.created_at) - new Date(left.created_at);
+          }
+          return new Date(right.created_at) - new Date(left.created_at);
+        });
+
+      if (!currentTickets.length) {
         list.innerHTML = '<div class="empty-state">You don’t have any support tickets yet.</div>';
         return;
       }
 
-      list.replaceChildren(...data.map((ticket) => {
+      if (!tickets.length) {
+        list.innerHTML = '<div class="empty-state">No open tickets. Tick “Show closed tickets” to include closed requests.</div>';
+        return;
+      }
+
+      const createTicketItem = (ticket) => {
+        const unread = isTicketUnread(ticket);
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "ticket-item";
+        button.className = `ticket-item${unread ? " unread" : ""}`;
         const meta = document.createElement("div");
         meta.className = "ticket-meta";
         const reference = document.createElement("span");
         reference.textContent = `${ticket.ticket_number} · ${formatDate(ticket.created_at)}`;
+        const badges = document.createElement("span");
+        badges.className = "ticket-badges";
         const badge = document.createElement("span");
         badge.className = `badge ${ticket.status}`;
         badge.textContent = statusLabel(ticket.status);
-        meta.append(reference, badge);
+        badges.append(badge);
+        if (unread) {
+          const unreadBadge = document.createElement("span");
+          unreadBadge.className = "badge unread-pill";
+          unreadBadge.textContent = "Unread";
+          badges.append(unreadBadge);
+        }
+        meta.append(reference, badges);
         const subject = document.createElement("p");
         subject.className = "ticket-subject";
         subject.textContent = ticket.subject;
@@ -858,11 +1107,37 @@
         button.append(meta, subject, product);
         button.addEventListener("click", () => openTicket(ticket));
         return button;
-      }));
+      };
+
+      if (sortBy === "status" || sortBy === "product") {
+        const groups = new Map();
+        tickets.forEach((ticket) => {
+          const groupName = sortBy === "status" ? statusLabel(ticket.status) : (ticket.product || "Other");
+          if (!groups.has(groupName)) groups.set(groupName, []);
+          groups.get(groupName).push(ticket);
+        });
+
+        list.replaceChildren(...[...groups.entries()].map(([groupName, groupTickets]) => {
+          const group = document.createElement("section");
+          group.className = "ticket-group";
+          const heading = document.createElement("h3");
+          heading.className = "ticket-group-heading";
+          const count = document.createElement("span");
+          count.className = "ticket-count";
+          count.textContent = `${groupTickets.length} ${groupTickets.length === 1 ? "ticket" : "tickets"}`;
+          heading.append(document.createTextNode(groupName), count);
+          group.append(heading, ...groupTickets.map(createTicketItem));
+          return group;
+        }));
+        return;
+      }
+
+      list.replaceChildren(...tickets.map(createTicketItem));
     }
 
     async function openTicket(ticket) {
       selectedTicket = ticket;
+      markTicketRead(ticket);
       clearStatus();
       byId("ticket-list-view").classList.add("hidden");
       byId("ticket-detail").classList.remove("hidden");
@@ -973,9 +1248,8 @@
       if (!currentUser) return window.location.replace("support.html");
       loginSection.classList.add("hidden");
       ticketSection.classList.remove("hidden");
-      byId("user-email").textContent = currentUser.email;
-      byId("email").value = currentUser.email || "";
-      byId("name").value = currentUser.user_metadata?.full_name || "";
+      prefillRequesterFields();
+      await Promise.all([loadSupportProfile(), loadProducts(), loadSupportAccess()]);
       setPanel("tickets-panel");
     }
 
@@ -995,6 +1269,9 @@
       byId("ticket-list-view").classList.remove("hidden");
       loadTickets();
     });
+
+    byId("show-closed-tickets").addEventListener("change", renderTickets);
+    byId("ticket-sort").addEventListener("change", renderTickets);
 
     loginForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1065,8 +1342,7 @@
       }
 
       supportForm.reset();
-      byId("email").value = currentUser.email || "";
-      byId("name").value = currentUser.user_metadata?.full_name || "";
+      prefillRequesterFields();
       button.disabled = false;
       button.textContent = "Submit support request →";
       if (statusBox.classList.contains("hidden")) showStatus(`Ticket ${data.ticket_number} was submitted.`, "success");
@@ -1083,7 +1359,7 @@
       button.disabled = true;
       button.textContent = "Sending…";
       const body = new FormData(replyForm).get("body");
-      const authorName = currentUser.user_metadata?.full_name || currentUser.email;
+      const authorName = preferredName() || currentUser.email;
       const { data, error } = await supabase.from("support_ticket_comments").insert({
         ticket_id: selectedTicket.id,
         author_id: currentUser.id,
