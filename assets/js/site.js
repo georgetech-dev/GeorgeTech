@@ -112,6 +112,13 @@ document.querySelectorAll("[data-current-year]").forEach((element) => {
   element.textContent = new Date().getFullYear();
 });
 
+document.querySelectorAll(".detail-grid, .contact-grid, .steps, .card-grid, .principle-columns, .service-benefits").forEach((group) => {
+  [...group.children].forEach((item, index) => {
+    item.classList.add("reveal");
+    item.style.setProperty("--reveal-delay", `${Math.min(index, 5) * 70}ms`);
+  });
+});
+
 const observedItems = document.querySelectorAll(".section-observe, .reveal");
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver((entries) => {
@@ -125,3 +132,51 @@ if ("IntersectionObserver" in window) {
 } else {
   observedItems.forEach((item) => item.classList.add("is-visible", "visible"));
 }
+
+window.requestAnimationFrame(() => document.body.classList.add("page-ready"));
+
+const backToTop = document.createElement("button");
+backToTop.type = "button";
+backToTop.className = "back-to-top";
+backToTop.setAttribute("aria-label", "Back to top");
+backToTop.innerHTML = `
+  <svg viewBox="0 0 52 52" aria-hidden="true">
+    <circle class="back-to-top-track" cx="26" cy="26" r="22"></circle>
+    <circle class="back-to-top-progress" cx="26" cy="26" r="22"></circle>
+  </svg>
+  <span aria-hidden="true">↑</span>`;
+document.body.append(backToTop);
+
+const progressCircle = backToTop.querySelector(".back-to-top-progress");
+const progressLength = 2 * Math.PI * 22;
+progressCircle.style.strokeDasharray = `${progressLength}`;
+progressCircle.style.strokeDashoffset = `${progressLength}`;
+
+let scrollUpdateQueued = false;
+const updateScrollProgress = () => {
+  const scrollableDistance = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+  const progress = Math.min(Math.max(window.scrollY / scrollableDistance, 0), 1);
+  progressCircle.style.strokeDashoffset = `${progressLength * (1 - progress)}`;
+  backToTop.classList.toggle("is-visible", window.scrollY > 420);
+  scrollUpdateQueued = false;
+};
+
+const queueScrollUpdate = () => {
+  if (scrollUpdateQueued) return;
+  scrollUpdateQueued = true;
+  window.requestAnimationFrame(updateScrollProgress);
+};
+
+window.addEventListener("scroll", queueScrollUpdate, { passive: true });
+window.addEventListener("resize", queueScrollUpdate);
+backToTop.addEventListener("click", () => {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+});
+updateScrollProgress();
+
+const chatWidget = document.createElement("script");
+chatWidget.src = "https://chat.georgetech.uk/widget.js";
+chatWidget.dataset.site = "bcd47f2f-e479-4521-a472-2e10001f5c97";
+chatWidget.async = true;
+document.body.append(chatWidget);
