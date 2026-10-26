@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Submit a support request to GeorgeTech.">
-  <title>Support Tickets | GeorgeTech</title>
+  <meta name="description" content="Manage your GeorgeTech support tickets, account and services.">
+  <title>Client Support | GeorgeTech</title>
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <style>
     :root {
@@ -471,8 +471,9 @@
       .comment { width: 92%; }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/site.css?v=20261018-1">
-  <script src="assets/js/site.js?v=20261018-1" defer></script>
+  <link rel="stylesheet" href="assets/css/site.css?v=20261026-1">
+  <script src="assets/js/site.js?v=20261026-1" defer></script>
+  <link rel="stylesheet" href="assets/css/client-portal.css?v=20261026-1">
 </head>
 <body class="support-portal-page">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -481,7 +482,7 @@
       <a class="brand" href="index.html" aria-label="GeorgeTech home"><img src="assets/images/georgetech-logo.png" alt="GeorgeTech"></a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle><span class="sr-only">Open navigation</span><span></span><span></span><span></span></button>
       <nav class="primary-nav" id="primary-nav" aria-label="Main navigation" data-primary-nav>
-        <a href="index.html">Home</a><a href="services.html">Services</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-support active" href="support.html" aria-current="page">Client support</a><a class="nav-phone" href="tel:+441959474747" aria-label="Call GeorgeTech on 01959 474747">01959 474747</a>
+        <a href="index.html">Home</a><a href="services.html">Services</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-support active" href="support.html" aria-current="page">Client support</a><div class="nav-contact"><a class="nav-phone" href="tel:+441959474747" aria-label="Call GeorgeTech on 01959 474747">01959 474747</a><a class="nav-email" href="mailto:support@georgetech.uk">support@georgetech.uk</a></div>
       </nav>
     </div>
   </header>
@@ -523,24 +524,22 @@
       </div>
 
       <div id="ticket-section" class="hidden">
+        <div class="portal-heading"><h1>Client support</h1><p>Your account, services and support in one place.</p></div>
         <div class="signed-in-bar">
           <div>Signed in as <strong id="user-email"></strong></div>
           <button class="text-button" id="logout-button" type="button">Sign out</button>
         </div>
         <div id="access-banner" class="access-banner hidden" role="alert"></div>
-        <nav class="portal-tabs" aria-label="Support sections">
-          <button class="portal-tab active" type="button" data-panel="tickets-panel">My tickets</button>
-          <button class="portal-tab" type="button" data-panel="new-ticket-panel">New request</button>
-        </nav>
+        <div class="portal-tabs" role="tablist" aria-label="Client support sections"><button class="portal-tab active" type="button" role="tab" id="tab-tickets" aria-selected="true" aria-controls="tickets-panel" tabindex="0" data-panel="tickets-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 10h8m-8 5h5M8 3v4m8-4v4"/></svg><span>Support tickets</span></button><button class="portal-tab" type="button" role="tab" id="tab-account" aria-selected="false" aria-controls="account-panel" tabindex="-1" data-panel="account-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>My account</span></button><button class="portal-tab" type="button" role="tab" id="tab-services" aria-selected="false" aria-controls="services-panel" tabindex="-1" data-panel="services-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Services</span></button><button class="portal-tab" type="button" role="tab" id="tab-appointments" aria-selected="false" aria-controls="appointments-panel" tabindex="-1" data-panel="appointments-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Appointments</span></button><button class="portal-tab" type="button" role="tab" id="tab-help" aria-selected="false" aria-controls="help-panel" tabindex="-1" data-panel="help-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4m0 3h.01"/></svg><span>Help</span></button></div>
 
-        <div id="tickets-panel">
+        <div id="tickets-panel" data-portal-panel role="tabpanel" aria-labelledby="tab-tickets" tabindex="0">
           <div id="ticket-list-view">
             <div class="tickets-heading">
               <div>
-                <h2>My tickets</h2>
+                <h2>Support tickets</h2>
                 <p class="required-note">View updates and continue a conversation with the support team.</p>
               </div>
-              <div class="ticket-toolbar" aria-label="Ticket filters">
+              <div class="ticket-toolbar" aria-label="Ticket filters"><button id="new-request-button" class="button button-primary" type="button">New request</button>
                 <label class="checkbox-field" for="show-closed-tickets">
                   <input id="show-closed-tickets" type="checkbox">
                   Show closed tickets
@@ -560,7 +559,7 @@
           </div>
           <div id="ticket-detail" class="hidden">
             <div class="detail-topline">
-              <button id="back-to-tickets" class="back-button" type="button">← All tickets</button>
+              <button id="back-to-tickets" class="back-button" type="button"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg> All tickets</button>
               <span id="detail-status" class="badge"></span>
             </div>
             <header class="detail-header">
@@ -593,7 +592,7 @@
           </div>
         </div>
 
-        <div id="new-ticket-panel" class="hidden">
+        <div id="new-ticket-panel" class="hidden" data-portal-panel role="region" aria-labelledby="form-title"><button class="text-button" id="cancel-new-request" type="button">Back to tickets</button>
         <h2 id="form-title">Submit a report</h2>
         <p class="required-note">All fields marked with * are required.</p>
 
@@ -651,758 +650,43 @@
           <span class="hint">Please don’t include passwords or other sensitive information.</span>
         </div>
 
-          <button id="submit-button" type="submit">Submit support request <span aria-hidden="true">→</span></button>
+          <button id="submit-button" type="submit">Submit support request <span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></button>
         </form>
         </div>
+        <section id="account-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-account" tabindex="0">
+          <div class="panel-intro"><h2>My account</h2><p>Your GeorgeTech identity and company membership.</p></div>
+          <div id="account-status" class="status hidden" role="status"></div>
+          <div class="account-grid"><section class="portal-subcard"><h3>Personal details</h3>
+            <form id="account-details-form"><div class="field"><label for="account-name">Full name</label><input id="account-name" name="full_name" autocomplete="name" maxlength="120" required disabled></div>
+            <div class="field"><label for="account-phone">Contact number</label><input id="account-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" disabled></div>
+            <div class="field"><label for="account-email">Sign-in email</label><input id="account-email" type="email" readonly><span class="hint">Contact support if you need to change your sign-in email.</span></div>
+            <button class="button button-primary" id="save-account-details" type="submit" disabled>Save details</button></form>
+          </section><section class="portal-subcard"><h3>Your company &amp; access</h3><dl class="account-facts">
+            <div><dt>Company name</dt><dd id="account-company-name">Loading…</dd></div>
+            <div><dt>Company ID</dt><dd id="account-company-id" class="identifier">Loading…</dd></div>
+            <div><dt>Your role</dt><dd id="account-role">Loading…</dd></div>
+            <div><dt>User status</dt><dd id="account-user-status">Loading…</dd></div>
+            <div><dt>Company status</dt><dd id="account-company-status">Loading…</dd></div>
+          </dl><p class="hint">Company membership and access are managed by GeorgeTech.</p></section></div>
+          <section class="portal-subcard security-card"><div><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><h3>Password &amp; security</h3><p>Send a secure link to your sign-in email to choose a new GeorgeTech password. Your webmail password is separate.</p></div><button class="button button-primary" id="account-change-password" type="button">Change password</button></section>
+        </section>
+        <section id="services-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-services" tabindex="0">
+          <div class="panel-intro"><div><h2>Your services</h2><p>Service availability for your company and your user account.</p></div><button class="text-button" id="refresh-services" type="button">Refresh access</button></div>
+          <p id="services-context" class="hint">Loading your company services…</p><div id="company-services" class="company-services" aria-live="polite"></div>
+        </section>
+        <section id="appointments-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-appointments" tabindex="0">
+          <div class="panel-intro"><h2>Appointments</h2><p>A place to arrange time with GeorgeTech.</p></div><div class="coming-soon-card"><svg class="coming-soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="6" width="12" height="12" rx="3"/><path d="m15 10 6-3v10l-6-3"/></svg><span class="coming-soon-badge">Coming soon</span><h3>Video appointments</h3><p>Book a video appointment and connect with GeorgeTech from your browser. This feature is being prepared.</p><a class="button button-primary" href="contact.html#callback-form">Ask about an appointment</a></div>
+        </section>
+        <section id="help-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-help" tabindex="0">
+          <div class="panel-intro"><h2>Help centre</h2><p>Practical help with your GeorgeTech services.</p></div><div class="coming-soon-card"><svg class="coming-soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4m0 3h.01"/></svg><span class="coming-soon-badge">Coming soon</span><h3>Guides, answers and useful tips</h3><p>We’re preparing a collection of help articles and step-by-step guides. In the meantime, raise a support ticket or get in touch.</p><button class="button button-primary" id="help-new-request" type="button">Raise a support ticket</button><a href="mailto:support@georgetech.uk">support@georgetech.uk</a></div>
+        </section>
+
       </div>
     </section>
   </main>
 
   <footer class="site-footer"><div class="shell footer-grid"><div class="footer-brand"><img src="assets/images/georgetech-logo.png" alt="GeorgeTech"><p>Practical digital systems for real businesses.</p></div><div><h2>Explore</h2><a href="services.html">Services</a><a href="about.html">About</a><a href="contact.html">Contact</a></div><div><h2>Help</h2><a href="support.html">Client support</a><a href="mailto:support@georgetech.uk">support@georgetech.uk</a></div><div><h2>Information</h2><a href="privacy.html">Privacy</a><a href="accessibility.html">Accessibility</a><a href="terms.html">Website terms</a></div></div><div class="shell footer-bottom"><span>&copy; <span data-current-year>2026</span> GeorgeTech.</span><span>UK-based independent business technology studio.</span></div></footer>
 
-  <script type="text/plain" data-replaced="support-portal-v2">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-    const supabase = createClient(
-      "https://lgchqleltppfdgtpgsbj.supabase.co",
-      "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
-    );
-
-    const loadingSection = document.getElementById("loading-section");
-    const loginSection = document.getElementById("login-section");
-    const ticketSection = document.getElementById("ticket-section");
-    const loginForm = document.getElementById("login-form");
-    const supportForm = document.getElementById("support-form");
-    const loginButton = document.getElementById("login-button");
-    const submitButton = document.getElementById("submit-button");
-    const status = document.getElementById("status");
-    let currentUser = null;
-
-    function showStatus(message, type = "error") {
-      status.textContent = message;
-      status.className = `status ${type}`;
-    }
-
-    function clearStatus() {
-      status.textContent = "";
-      status.className = "status hidden";
-    }
-
-    function showSession(session) {
-      currentUser = session?.user || null;
-      loadingSection.classList.add("hidden");
-      loginSection.classList.toggle("hidden", Boolean(currentUser));
-      ticketSection.classList.toggle("hidden", !currentUser);
-
-      if (currentUser) {
-        document.getElementById("user-email").textContent = currentUser.email;
-        document.getElementById("email").value = currentUser.email || "";
-        document.getElementById("name").value = currentUser.user_metadata?.full_name || "";
-      }
-    }
-
-    loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      loginButton.disabled = true;
-      loginButton.textContent = "Signing in…";
-
-      const data = new FormData(loginForm);
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: data.get("email"),
-        password: data.get("password")
-      });
-
-      loginButton.disabled = false;
-      loginButton.textContent = "Sign in";
-      if (error) return showStatus(error.message);
-      loginForm.reset();
-      clearStatus();
-      showSession(authData.session);
-    });
-
-    document.getElementById("forgot-password").addEventListener("click", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      const email = document.getElementById("login-email").value.trim();
-      if (!email) return showStatus("Enter your email address first, then select ‘Forgot your password?’. ");
-
-      const redirectTo = `${window.location.origin}/password-reset.html`;
-      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-      if (error) return showStatus(error.message);
-      showStatus("Password reset email sent. Check your inbox.", "success");
-    });
-
-    document.getElementById("logout-button").addEventListener("click", async () => {
-      clearStatus();
-      await supabase.auth.signOut();
-      supportForm.reset();
-      showSession(null);
-    });
-
-    supportForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      if (!supportForm.reportValidity() || !currentUser) return;
-
-      submitButton.disabled = true;
-      submitButton.textContent = "Submitting…";
-      const formData = new FormData(supportForm);
-      const { data, error } = await supabase
-        .from("support_tickets")
-        .insert({
-          user_id: currentUser.id,
-          requester_name: formData.get("name"),
-          requester_email: currentUser.email,
-          product: formData.get("product"),
-          category: formData.get("category"),
-          subject: formData.get("subject"),
-          description: formData.get("details")
-        })
-        .select("ticket_number")
-        .single();
-
-      submitButton.disabled = false;
-      submitButton.innerHTML = 'Submit support request <span aria-hidden="true">→</span>';
-
-      if (error) {
-        console.error(error);
-        return showStatus("We couldn’t submit your request. Please try again or email support@georgetech.uk.");
-      }
-
-      supportForm.reset();
-      document.getElementById("email").value = currentUser.email || "";
-      document.getElementById("name").value = currentUser.user_metadata?.full_name || "";
-      showStatus(`Your request has been submitted. Ticket reference: ${data.ticket_number}.`, "success");
-      status.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-
-    const { data: { session } } = await supabase.auth.getSession();
-    showSession(session);
-    supabase.auth.onAuthStateChange((_event, newSession) => showSession(newSession));
-  </script>
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-    const supabase = createClient(
-      "https://lgchqleltppfdgtpgsbj.supabase.co",
-      "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
-    );
-
-    const byId = (id) => document.getElementById(id);
-    const loadingSection = byId("loading-section");
-    const loginSection = byId("login-section");
-    const ticketSection = byId("ticket-section");
-    const loginForm = byId("login-form");
-    const supportForm = byId("support-form");
-    const replyForm = byId("reply-form");
-    const statusBox = byId("status");
-    const accessBanner = byId("access-banner");
-    let currentUser = null;
-    let selectedTicket = null;
-    let currentProfile = null;
-    let currentTickets = [];
-    const defaultProducts = ["GeorgeTech Extractor", "Folder Manager", "SMS Portal", "Other"];
-    const statusOrder = {
-      new: 1,
-      in_progress: 2,
-      waiting_on_customer: 3,
-      resolved: 4,
-      closed: 5
-    };
-
-    function showStatus(message, type = "error") {
-      statusBox.textContent = message;
-      statusBox.className = `status ${type}`;
-    }
-
-    function clearStatus() {
-      statusBox.textContent = "";
-      statusBox.className = "status hidden";
-    }
-
-    function showAccessBanner(access) {
-      if (!access || access.can_access !== false) {
-        accessBanner.classList.add("hidden");
-        accessBanner.replaceChildren();
-        return;
-      }
-
-      const title = document.createElement("strong");
-      title.textContent = access.banner_title || "Support Centre access suspended";
-      const message = document.createElement("span");
-      message.textContent = access.banner_message || "Your access is currently suspended. Please contact GeorgeTech support if you believe this is incorrect.";
-      accessBanner.replaceChildren(title, message);
-      accessBanner.classList.remove("hidden");
-    }
-
-    function formatDate(value) {
-      return new Intl.DateTimeFormat("en-GB", {
-        dateStyle: "medium",
-        timeStyle: "short"
-      }).format(new Date(value));
-    }
-
-    function statusLabel(value) {
-      return value.replaceAll("_", " ");
-    }
-
-    function ticketReadKey(ticket) {
-      return `georgetech-support-read:${currentUser?.id || "guest"}:${ticket.id}`;
-    }
-
-    function ticketFingerprint(ticket) {
-      return [ticket.updated_at, ticket.status].filter(Boolean).join("|");
-    }
-
-    function isTicketUnread(ticket) {
-      return window.localStorage.getItem(ticketReadKey(ticket)) !== ticketFingerprint(ticket);
-    }
-
-    function markTicketRead(ticket) {
-      window.localStorage.setItem(ticketReadKey(ticket), ticketFingerprint(ticket));
-    }
-
-    function preferredName() {
-      return currentProfile?.display_name
-        || currentProfile?.full_name
-        || currentUser?.user_metadata?.full_name
-        || currentUser?.user_metadata?.name
-        || currentUser?.email?.split("@")[0]
-        || "";
-    }
-
-    function prefillRequesterFields() {
-      byId("user-email").textContent = currentUser?.email || "";
-      byId("email").value = currentUser?.email || "";
-      byId("name").value = preferredName();
-    }
-
-    function populateProductOptions(products = defaultProducts) {
-      const select = byId("product");
-      const current = select.value;
-      const uniqueProducts = [...new Set(products.filter(Boolean))];
-      select.replaceChildren(new Option("Select a product", "", true, !current));
-      uniqueProducts.forEach((product) => select.add(new Option(product, product, false, product === current)));
-      if (current && uniqueProducts.includes(current)) select.value = current;
-    }
-
-    async function loadSupportProfile() {
-      currentProfile = null;
-      try {
-        const { data, error } = await supabase.rpc("get_my_support_profile");
-        if (!error) currentProfile = Array.isArray(data) ? data[0] : data;
-      } catch (_error) {
-        currentProfile = null;
-      }
-      prefillRequesterFields();
-    }
-
-    async function loadSupportAccess() {
-      try {
-        const { data, error } = await supabase.rpc("get_my_support_access", {
-          target_app_code: "customer_portal"
-        });
-        if (!error) {
-          showAccessBanner(Array.isArray(data) ? data[0] : data);
-          return;
-        }
-      } catch (_error) {
-        // If the migration has not reached this environment yet, keep the portal usable.
-      }
-      showAccessBanner(null);
-    }
-
-    async function loadProducts() {
-      try {
-        const { data, error } = await supabase.rpc("get_support_products");
-        if (!error && data?.length) {
-          populateProductOptions([...data.map((item) => item.name || item.product_name || item), "Other"]);
-          return;
-        }
-      } catch (_error) {
-        // Fall back below if the helper migration is not deployed yet.
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from("app_catalog")
-          .select("name")
-          .eq("is_active", true)
-          .order("sort_order", { ascending: true })
-          .order("name", { ascending: true });
-        if (!error && data?.length) {
-          populateProductOptions([...data.map((item) => item.name), "Other"]);
-          return;
-        }
-      } catch (_error) {
-        // Fall back below if app_catalog is not readable by this session.
-      }
-
-      populateProductOptions(defaultProducts);
-    }
-
-    function setPanel(panelId) {
-      document.querySelectorAll(".portal-tab").forEach((tab) => {
-        tab.classList.toggle("active", tab.dataset.panel === panelId);
-      });
-      byId("tickets-panel").classList.toggle("hidden", panelId !== "tickets-panel");
-      byId("new-ticket-panel").classList.toggle("hidden", panelId !== "new-ticket-panel");
-      clearStatus();
-      if (panelId === "tickets-panel") loadTickets();
-    }
-
-    function validateFiles(files) {
-      const allowed = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-      for (const file of files) {
-        if (!allowed.includes(file.type)) throw new Error(`${file.name} is not a supported image.`);
-        if (file.size > 5 * 1024 * 1024) throw new Error(`${file.name} is larger than 5 MB.`);
-      }
-    }
-
-    function setupDropZones() {
-      document.querySelectorAll(".drop-zone").forEach((zone) => {
-        const input = byId(zone.dataset.input);
-        const preview = zone.querySelector(".file-preview");
-
-        const setFiles = (incoming, append = true) => {
-          const files = append ? [...input.files, ...incoming] : [...incoming];
-          const unique = files.filter((file, index, all) =>
-            all.findIndex((candidate) => candidate.name === file.name && candidate.size === file.size && candidate.lastModified === file.lastModified) === index
-          );
-          try { validateFiles(unique); }
-          catch (error) { showStatus(error.message); return; }
-          const transfer = new DataTransfer();
-          unique.forEach((file) => transfer.items.add(file));
-          input.files = transfer.files;
-          preview.replaceChildren(...unique.map((file) => {
-            const chip = document.createElement("span");
-            chip.className = "file-chip";
-            chip.textContent = file.name;
-            chip.title = file.name;
-            return chip;
-          }));
-        };
-
-        zone.addEventListener("click", (event) => {
-          if (event.target !== input) input.click();
-        });
-        zone.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); input.click(); }
-        });
-        input.addEventListener("change", () => setFiles(input.files, false));
-        ["dragenter", "dragover"].forEach((name) => zone.addEventListener(name, (event) => {
-          event.preventDefault(); zone.classList.add("dragging");
-        }));
-        ["dragleave", "drop"].forEach((name) => zone.addEventListener(name, (event) => {
-          event.preventDefault(); zone.classList.remove("dragging");
-        }));
-        zone.addEventListener("drop", (event) => setFiles(event.dataTransfer.files));
-        zone.addEventListener("paste", (event) => {
-          const pasted = [...event.clipboardData.items]
-            .filter((item) => item.kind === "file" && item.type.startsWith("image/"))
-            .map((item, index) => {
-              const blob = item.getAsFile();
-              const extension = blob.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
-              return new File([blob], `pasted-screenshot-${Date.now()}-${index + 1}.${extension}`, { type: blob.type });
-            });
-          if (pasted.length) { event.preventDefault(); setFiles(pasted); }
-        });
-      });
-    }
-
-    async function uploadFiles(files, ticketId, commentId = null) {
-      const selectedFiles = Array.from(files || []);
-      validateFiles(selectedFiles);
-
-      for (const file of selectedFiles) {
-        const extension = file.name.split(".").pop()?.toLowerCase() || "image";
-        const path = `${currentUser.id}/${ticketId}/${crypto.randomUUID()}.${extension}`;
-        const { error: uploadError } = await supabase.storage
-          .from("support-attachments")
-          .upload(path, file, { contentType: file.type, upsert: false });
-        if (uploadError) throw uploadError;
-
-        const { error: recordError } = await supabase.from("support_ticket_attachments").insert({
-          ticket_id: ticketId,
-          comment_id: commentId,
-          uploaded_by: currentUser.id,
-          storage_path: path,
-          file_name: file.name,
-          mime_type: file.type,
-          file_size: file.size
-        });
-        if (recordError) throw recordError;
-      }
-    }
-
-    async function loadTickets() {
-      const list = byId("ticket-list");
-      list.innerHTML = '<div class="empty-state">Loading tickets…</div>';
-      const { data, error } = await supabase
-        .from("support_tickets")
-        .select("id,ticket_number,subject,product,status,created_at,updated_at,description")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        list.innerHTML = '<div class="empty-state">Tickets could not be loaded.</div>';
-        return showStatus("We couldn’t load your tickets. Please try again.");
-      }
-
-      currentTickets = data || [];
-      renderTickets();
-    }
-
-    function renderTickets() {
-      const list = byId("ticket-list");
-      const showClosed = byId("show-closed-tickets").checked;
-      const sortBy = byId("ticket-sort").value;
-      const tickets = currentTickets
-        .filter((ticket) => showClosed || ticket.status !== "closed" || isTicketUnread(ticket))
-        .sort((left, right) => {
-          if (sortBy === "date_asc") return new Date(left.created_at) - new Date(right.created_at);
-          if (sortBy === "status") {
-            return (statusOrder[left.status] || 99) - (statusOrder[right.status] || 99)
-              || new Date(right.created_at) - new Date(left.created_at);
-          }
-          if (sortBy === "product") {
-            return (left.product || "").localeCompare(right.product || "")
-              || new Date(right.created_at) - new Date(left.created_at);
-          }
-          return new Date(right.created_at) - new Date(left.created_at);
-        });
-
-      if (!currentTickets.length) {
-        list.innerHTML = '<div class="empty-state">You don’t have any support tickets yet.</div>';
-        return;
-      }
-
-      if (!tickets.length) {
-        list.innerHTML = '<div class="empty-state">No open tickets. Tick “Show closed tickets” to include closed requests.</div>';
-        return;
-      }
-
-      const createTicketItem = (ticket) => {
-        const unread = isTicketUnread(ticket);
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `ticket-item${unread ? " unread" : ""}`;
-        const meta = document.createElement("div");
-        meta.className = "ticket-meta";
-        const reference = document.createElement("span");
-        reference.textContent = `${ticket.ticket_number} · ${formatDate(ticket.created_at)}`;
-        const badges = document.createElement("span");
-        badges.className = "ticket-badges";
-        const badge = document.createElement("span");
-        badge.className = `badge ${ticket.status}`;
-        badge.textContent = statusLabel(ticket.status);
-        badges.append(badge);
-        if (unread) {
-          const unreadBadge = document.createElement("span");
-          unreadBadge.className = "badge unread-pill";
-          unreadBadge.textContent = "Unread";
-          badges.append(unreadBadge);
-        }
-        meta.append(reference, badges);
-        const subject = document.createElement("p");
-        subject.className = "ticket-subject";
-        subject.textContent = ticket.subject;
-        const product = document.createElement("span");
-        product.className = "ticket-product";
-        product.textContent = ticket.product;
-        button.append(meta, subject, product);
-        button.addEventListener("click", () => openTicket(ticket));
-        return button;
-      };
-
-      if (sortBy === "status" || sortBy === "product") {
-        const groups = new Map();
-        tickets.forEach((ticket) => {
-          const groupName = sortBy === "status" ? statusLabel(ticket.status) : (ticket.product || "Other");
-          if (!groups.has(groupName)) groups.set(groupName, []);
-          groups.get(groupName).push(ticket);
-        });
-
-        list.replaceChildren(...[...groups.entries()].map(([groupName, groupTickets]) => {
-          const group = document.createElement("section");
-          group.className = "ticket-group";
-          const heading = document.createElement("h3");
-          heading.className = "ticket-group-heading";
-          const count = document.createElement("span");
-          count.className = "ticket-count";
-          count.textContent = `${groupTickets.length} ${groupTickets.length === 1 ? "ticket" : "tickets"}`;
-          heading.append(document.createTextNode(groupName), count);
-          group.append(heading, ...groupTickets.map(createTicketItem));
-          return group;
-        }));
-        return;
-      }
-
-      list.replaceChildren(...tickets.map(createTicketItem));
-    }
-
-    async function openTicket(ticket) {
-      selectedTicket = ticket;
-      markTicketRead(ticket);
-      clearStatus();
-      byId("ticket-list-view").classList.add("hidden");
-      byId("ticket-detail").classList.remove("hidden");
-      byId("detail-subject").textContent = ticket.subject;
-      byId("detail-reference").textContent = `${ticket.ticket_number} · ${ticket.product} · Opened ${formatDate(ticket.created_at)}`;
-      const detailMeta = byId("detail-reference");
-      detailMeta.replaceChildren(...[
-        ["Ticket", ticket.ticket_number],
-        ["App", ticket.product],
-        ["Opened", formatDate(ticket.created_at)]
-      ].map(([label, value]) => {
-        const item = document.createElement("span");
-        item.className = "meta-item";
-        const labelElement = document.createElement("strong");
-        labelElement.textContent = `${label}:`;
-        item.append(labelElement, document.createTextNode(value));
-        return item;
-      }));
-
-      const descriptionLines = ticket.description.split(/\r?\n/);
-      const firstContentLine = descriptionLines.findIndex((line) => line.trim());
-      const descriptionTitle = byId("detail-description-title");
-      const hasReportTitle = firstContentLine >= 0 && /^In-App Bug Report:?$/i.test(descriptionLines[firstContentLine].trim());
-      descriptionTitle.textContent = hasReportTitle ? descriptionLines[firstContentLine].trim().replace(/:$/, "") : "";
-      descriptionTitle.classList.toggle("hidden", !hasReportTitle);
-      if (hasReportTitle) descriptionLines.splice(firstContentLine, 1);
-      byId("detail-description").textContent = descriptionLines.join("\n").trim();
-      const badge = byId("detail-status");
-      badge.className = `badge ${ticket.status}`;
-      badge.textContent = statusLabel(ticket.status);
-      const isClosed = ticket.status === "closed";
-      replyForm.classList.toggle("hidden", isClosed);
-      byId("close-ticket-button").classList.toggle("hidden", isClosed);
-      await loadConversation(ticket.id);
-    }
-
-    async function loadConversation(ticketId) {
-      const timeline = byId("comment-timeline");
-      const gallery = byId("ticket-attachments");
-      timeline.innerHTML = '<div class="empty-state">Loading conversation…</div>';
-      gallery.replaceChildren();
-
-      const [commentsResult, attachmentsResult] = await Promise.all([
-        supabase.from("support_ticket_comments").select("id,author_type,author_name,body,created_at").eq("ticket_id", ticketId).order("created_at"),
-        supabase.from("support_ticket_attachments").select("id,comment_id,storage_path,file_name").eq("ticket_id", ticketId).order("created_at")
-      ]);
-
-      if (commentsResult.error || attachmentsResult.error) {
-        timeline.innerHTML = '<div class="empty-state">Conversation could not be loaded.</div>';
-        return;
-      }
-
-      const comments = commentsResult.data;
-      const attachments = (await Promise.all(attachmentsResult.data.map(async (attachment) => {
-        const { data } = await supabase.storage
-          .from("support-attachments")
-          .createSignedUrl(attachment.storage_path, 3600);
-        return data?.signedUrl ? { ...attachment, signedUrl: data.signedUrl } : null;
-      }))).filter(Boolean);
-
-      const createAttachmentLink = (attachment) => {
-        const link = document.createElement("a");
-        link.href = attachment.signedUrl;
-        link.target = "_blank";
-        link.rel = "noopener";
-        link.title = attachment.file_name;
-        const image = document.createElement("img");
-        image.src = attachment.signedUrl;
-        image.alt = attachment.file_name;
-        image.loading = "lazy";
-        link.append(image);
-        return link;
-      };
-
-      gallery.replaceChildren(...attachments.filter((attachment) => !attachment.comment_id).map(createAttachmentLink));
-      timeline.replaceChildren(...comments.map((comment) => {
-        const item = document.createElement("article");
-        item.className = `comment ${comment.author_type}`;
-        const head = document.createElement("div");
-        head.className = "comment-head";
-        const author = document.createElement("strong");
-        author.textContent = comment.author_type === "staff" ? `${comment.author_name} · GeorgeTech` : comment.author_name;
-        const date = document.createElement("span");
-        date.textContent = formatDate(comment.created_at);
-        const body = document.createElement("p");
-        body.textContent = comment.body;
-        head.append(author, date);
-        item.append(head, body);
-        const commentAttachments = attachments.filter((attachment) => attachment.comment_id === comment.id);
-        if (commentAttachments.length) {
-          const commentGallery = document.createElement("div");
-          commentGallery.className = "attachment-grid";
-          commentGallery.replaceChildren(...commentAttachments.map(createAttachmentLink));
-          item.append(commentGallery);
-        }
-        return item;
-      }));
-
-      if (!comments.length) {
-        timeline.innerHTML = '<div class="empty-state">No comments yet. We’ll post updates here.</div>';
-      }
-
-    }
-
-    async function showSession(session) {
-      currentUser = session?.user || null;
-      loadingSection.classList.add("hidden");
-      if (!currentUser) return window.location.replace("support.html");
-      loginSection.classList.add("hidden");
-      ticketSection.classList.remove("hidden");
-      prefillRequesterFields();
-      await Promise.all([loadSupportProfile(), loadProducts(), loadSupportAccess()]);
-      setPanel("tickets-panel");
-    }
-
-    document.querySelectorAll(".portal-tab").forEach((tab) => {
-      tab.addEventListener("click", () => setPanel(tab.dataset.panel));
-    });
-
-    [supportForm, replyForm].forEach((form) => {
-      form.addEventListener("reset", () => {
-        window.setTimeout(() => form.querySelectorAll(".file-preview").forEach((preview) => preview.replaceChildren()), 0);
-      });
-    });
-
-    byId("back-to-tickets").addEventListener("click", () => {
-      selectedTicket = null;
-      byId("ticket-detail").classList.add("hidden");
-      byId("ticket-list-view").classList.remove("hidden");
-      loadTickets();
-    });
-
-    byId("show-closed-tickets").addEventListener("change", renderTickets);
-    byId("ticket-sort").addEventListener("change", renderTickets);
-
-    loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      const button = byId("login-button");
-      button.disabled = true;
-      button.textContent = "Signing in…";
-      const values = new FormData(loginForm);
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.get("email"),
-        password: values.get("password")
-      });
-      button.disabled = false;
-      button.textContent = "Sign in";
-      if (error) return showStatus(error.message);
-      loginForm.reset();
-      showSession(data.session);
-    });
-
-    byId("forgot-password").addEventListener("click", async (event) => {
-      event.preventDefault();
-      const email = byId("login-email").value.trim();
-      if (!email) return showStatus("Enter your email address first.");
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/password-reset.html`
-      });
-      if (error) return showStatus(error.message);
-      showStatus("Password reset email sent. Check your inbox.", "success");
-    });
-
-    byId("logout-button").addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.replace("support.html");
-    });
-
-    supportForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      if (!supportForm.reportValidity() || !currentUser) return;
-      const files = byId("ticket-files").files;
-      try { validateFiles(files); } catch (error) { return showStatus(error.message); }
-
-      const button = byId("submit-button");
-      button.disabled = true;
-      button.textContent = "Submitting…";
-      const values = new FormData(supportForm);
-      const { data, error } = await supabase.from("support_tickets").insert({
-        user_id: currentUser.id,
-        requester_name: values.get("name"),
-        requester_email: currentUser.email,
-        product: values.get("product"),
-        category: values.get("category"),
-        subject: values.get("subject"),
-        description: values.get("details")
-      }).select("id,ticket_number").single();
-
-      if (error) {
-        button.disabled = false;
-        button.textContent = "Submit support request →";
-        return showStatus("We couldn’t submit your request. Please try again.");
-      }
-
-      try {
-        await uploadFiles(files, data.id);
-      } catch (uploadError) {
-        console.error(uploadError);
-        showStatus(`Ticket ${data.ticket_number} was created, but one or more screenshots could not be uploaded.`, "error");
-      }
-
-      supportForm.reset();
-      prefillRequesterFields();
-      button.disabled = false;
-      button.textContent = "Submit support request →";
-      if (statusBox.classList.contains("hidden")) showStatus(`Ticket ${data.ticket_number} was submitted.`, "success");
-      setTimeout(() => setPanel("tickets-panel"), 900);
-    });
-
-    replyForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearStatus();
-      if (!selectedTicket || !replyForm.reportValidity()) return;
-      const files = byId("reply-files").files;
-      try { validateFiles(files); } catch (error) { return showStatus(error.message); }
-      const button = byId("reply-button");
-      button.disabled = true;
-      button.textContent = "Sending…";
-      const body = new FormData(replyForm).get("body");
-      const authorName = preferredName() || currentUser.email;
-      const { data, error } = await supabase.from("support_ticket_comments").insert({
-        ticket_id: selectedTicket.id,
-        author_id: currentUser.id,
-        author_type: "customer",
-        author_name: authorName,
-        body
-      }).select("id").single();
-
-      if (error) {
-        button.disabled = false;
-        button.textContent = "Send comment";
-        return showStatus("Your comment could not be sent.");
-      }
-
-      try { await uploadFiles(files, selectedTicket.id, data.id); }
-      catch (uploadError) { showStatus("Your comment was sent, but a screenshot could not be uploaded."); }
-      replyForm.reset();
-      button.disabled = false;
-      button.textContent = "Send comment";
-      await loadConversation(selectedTicket.id);
-    });
-
-    byId("close-ticket-button").addEventListener("click", async () => {
-      if (!selectedTicket || !window.confirm("Close this support request? You won’t be able to add more comments.")) return;
-      const { data, error } = await supabase.rpc("close_own_support_ticket", {
-        target_ticket_id: selectedTicket.id
-      });
-      if (error || !data) return showStatus("This ticket could not be closed.");
-      selectedTicket.status = "closed";
-      showStatus(`${selectedTicket.ticket_number} has been closed.`, "success");
-      openTicket(selectedTicket);
-    });
-
-    setupDropZones();
-    const { data: { session } } = await supabase.auth.getSession();
-    showSession(session);
-    supabase.auth.onAuthStateChange((_event, nextSession) => showSession(nextSession));
-  </script>
+  <script type="module" src="assets/js/support-portal.js?v=20261026-2"></script>
 </body>
 </html>

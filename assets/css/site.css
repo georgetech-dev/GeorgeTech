@@ -1070,3 +1070,56 @@ body {
   }
   .primary-nav.open a { opacity: 1; transform: none; }
 }
+
+/* Consistent SVG controls and contact routes — October 2026. */
+.ui-icon { display: inline-block; width: 21px; height: 21px; flex: 0 0 auto; vertical-align: middle; }
+.button { gap: 10px; }
+.inline-arrow .ui-icon, .detail-link .ui-icon { transition: transform .22s ease; }
+.inline-arrow:hover .ui-icon, .detail-link:hover .ui-icon { transform: translateX(3px); }
+.service-back { align-items: center; gap: 9px; }
+.nav-contact { display: grid; gap: 2px; margin-left: 5px; }
+.primary-nav .nav-contact a { padding: 1px 0; text-transform: none; letter-spacing: 0; }
+.primary-nav .nav-contact .nav-phone { font-size: 1.16rem; font-weight: 800; color: var(--blue); }
+.primary-nav .nav-contact .nav-email { font-size: .78rem; font-weight: 600; color: #405568; }
+.primary-nav .nav-contact a::after { display: none; }
+.primary-nav .nav-contact a:hover { color: #084a96; }
+
+/* Keep the gradient stable and fade a colour layer, avoiding a gradient/solid snap. */
+.button-primary, .primary-nav .nav-support, .home-page .primary-nav .nav-support {
+  position: relative; isolation: isolate; overflow: hidden;
+  color: #fff; background: linear-gradient(135deg,var(--blue),var(--navy));
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.button-primary:hover, .button-primary:focus-visible,
+.primary-nav .nav-support:hover, .primary-nav .nav-support:focus-visible,
+.home-page .primary-nav .nav-support:hover, .home-page .primary-nav .nav-support:focus-visible {
+  color: #fff; background: linear-gradient(135deg,var(--blue),var(--navy));
+  box-shadow: 0 12px 25px rgba(13,115,206,.26);
+}
+.button-primary::before, .primary-nav .nav-support::before {
+  content: ''; position: absolute; z-index: -1; inset: 0;
+  background: #0757a9; opacity: 0; pointer-events: none; transition: opacity .22s ease;
+}
+.button-primary:hover::before, .button-primary:focus-visible::before,
+.primary-nav .nav-support:hover::before, .primary-nav .nav-support:focus-visible::before { opacity: 1; }
+.button:focus-visible, .primary-nav a:focus-visible { outline: 3px solid #79c142; outline-offset: 4px; }
+.back-to-top .scroll-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.back-to-top .scroll-arrow { position: relative; inset: auto; width: 21px; height: 21px; transform: none; }
+@media (min-width: 861px) and (max-width: 1120px) {
+  .header-inner { gap: 18px; }
+  .primary-nav { gap: 14px; }
+  .brand { width: 108px; }
+  .primary-nav .nav-contact .nav-phone { font-size: 1.02rem; }
+  .primary-nav .nav-contact .nav-email { font-size: .7rem; }
+}
+@media (max-width: 860px) {
+  .nav-contact { margin: 4px 0 0; gap: 8px; }
+  .primary-nav .nav-contact a { justify-content: center; padding: 10px 8px; }
+  .primary-nav .nav-contact .nav-phone { min-height: 54px; font-size: 1.35rem; }
+  .primary-nav .nav-contact .nav-email { min-height: 42px; font-size: .95rem; }
+  .primary-nav .nav-contact a::before { display: none; }
+  .primary-nav .nav-support { flex: 0 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button, .button-primary::before, .primary-nav .nav-support::before { transition: none; }
+}

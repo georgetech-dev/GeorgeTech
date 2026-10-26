@@ -140,11 +140,11 @@ backToTop.type = "button";
 backToTop.className = "back-to-top";
 backToTop.setAttribute("aria-label", "Back to top");
 backToTop.innerHTML = `
-  <svg viewBox="0 0 52 52" aria-hidden="true">
+  <svg class="scroll-ring" viewBox="0 0 52 52" aria-hidden="true">
     <circle class="back-to-top-track" cx="26" cy="26" r="22"></circle>
     <circle class="back-to-top-progress" cx="26" cy="26" r="22"></circle>
   </svg>
-  <span aria-hidden="true">↑</span>`;
+  <svg class="scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg>`;
 document.body.append(backToTop);
 
 const progressCircle = backToTop.querySelector(".back-to-top-progress");
@@ -175,8 +175,10 @@ backToTop.addEventListener("click", () => {
 });
 updateScrollProgress();
 
+if (!document.body.hasAttribute("data-no-chat")) {
 const chatWidget = document.createElement("script");
 chatWidget.src = "https://chat.georgetech.uk/widget.js";
 chatWidget.dataset.site = "bcd47f2f-e479-4521-a472-2e10001f5c97";
 chatWidget.async = true;
 document.body.append(chatWidget);
+}

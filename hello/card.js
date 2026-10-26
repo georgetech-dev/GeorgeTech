@@ -8,7 +8,7 @@ const profiles = {
     company: "GeorgeTech",
     phoneDisplay: "01959 474747",
     phoneHref: "+441959474747",
-    email: "support@georgetech.uk",
+    email: "stephan@georgetech.uk",
     website: "https://georgetech.uk",
     intro: "Practical websites, apps and digital systems built around the way your business really works."
   }

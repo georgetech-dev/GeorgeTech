@@ -1,0 +1,96 @@
+/* Shared Client Support account and recovery components. */
+.portal-heading { margin-bottom: 26px; }
+.portal-heading h1 { margin: 0 0 8px; color: var(--navy); font-size: clamp(1.8rem,3.5vw,2.7rem); letter-spacing: -.04em; line-height: 1.12; }
+.portal-heading p { margin: 0; color: var(--muted); font-size: .95rem; }
+.support-portal-page .portal-tabs { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 5px; padding: 6px; margin: 0 0 30px; }
+.support-portal-page .portal-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; min-height: 85px; padding: 14px 8px; width: 100%; border: 1px solid transparent; font-size: .83rem; font-weight: 700; transition: background-color .25s ease,color .25s ease; }
+.support-portal-page .portal-tab:hover { transform: none; color: var(--blue); background: rgba(255,255,255,.7); }
+.support-portal-page .portal-tab.active { color: var(--blue); background: #fff; border-color: #d7e5f0; }
+.portal-icon { width: 23px; height: 23px; flex: 0 0 auto; color: var(--blue); }
+[data-portal-panel]:focus-visible { outline: 2px solid var(--blue); outline-offset: 5px; }
+.panel-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+.panel-intro h2 { width: 100%; }
+.panel-intro > div h2 { width: auto; }
+.panel-intro p { margin: 7px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.6; }
+.account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.portal-subcard { border: 1px solid #dce6ee; border-radius: 16px; padding: 25px; background: #fbfdff; min-width: 0; }
+.portal-subcard h3 { margin: 0 0 20px; color: var(--navy); font-size: 1.12rem; }
+.portal-subcard .hint, .company-service-card .hint { display: block; font-size: .8rem; color: var(--muted); line-height: 1.6; }
+.account-facts { margin: 0; }
+.account-facts > div { padding: 13px 0; border-bottom: 1px solid var(--line); }
+.account-facts > div:first-child { padding-top: 0; }
+.account-facts dt { font-size: .76rem; color: var(--muted); margin-bottom: 5px; }
+.account-facts dd { margin: 0; font-size: .95rem; font-weight: 650; overflow-wrap: anywhere; }
+.account-facts .identifier { font-family: ui-monospace,SFMono-Regular,Consolas,monospace; font-size: .81rem; }
+#account-company-status { text-transform: capitalize; }
+.support-portal-page input:read-only { background: #f0f4f8; color: #526779; }
+.support-portal-page button:disabled, .recovery-page button:disabled { opacity: .58; cursor: wait; transform: none; }
+.security-card { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-top: 24px; }
+.security-card h3 { margin: 12px 0 8px; }
+.security-card p { max-width: 580px; margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.support-portal-page .security-card button { width: auto; flex: 0 0 auto; }
+.company-services { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin-top: 20px; }
+.company-service-card { display: flex; flex-direction: column; min-width: 0; padding: 25px; border: 1px solid var(--line); border-radius: 16px; background: #fbfdff; }
+.company-service-card h3 { margin: 0 0 12px; font-size: 1.1rem; color: var(--navy); }
+.company-service-card > p:not(.hint) { margin: 0 0 18px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+.service-access-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: auto 0 4px; }
+.service-access-facts dt { font-size: .74rem; color: var(--muted); margin-bottom: 6px; }
+.service-access-facts dd { margin: 0; font-size: .82rem; font-weight: 750; }
+.access-good { color: #24682c; }
+.access-neutral { color: #647386; }
+.company-service-card .button, .company-service-card .text-button { width: fit-content; margin-top: 8px; }
+.coming-soon-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 48px 25px; border: 1px solid #dce8f2; border-radius: 18px; background: linear-gradient(140deg,#f0f7fc,#fff); }
+.coming-soon-icon { display: block; width: 64px; height: 64px; margin-bottom: 22px; color: var(--blue); }
+.coming-soon-badge { padding: 6px 12px; border: 1px solid #bcd4e6; border-radius: 20px; color: #356589; background: #edf6fc; font-size: .75rem; font-weight: 750; }
+.coming-soon-card h3 { margin: 22px 0 0; color: var(--navy); font-size: 1.5rem; }
+.coming-soon-card p { max-width: 480px; margin: 16px 0 25px; color: var(--muted); line-height: 1.7; }
+.support-portal-page .coming-soon-card .button { width: auto; }
+.coming-soon-card > a:not(.button) { margin-top: 20px; font-size: .9rem; overflow-wrap: anywhere; }
+#cancel-new-request { margin-bottom: 24px; }
+.recovery-page main { padding-block: 64px 80px; }
+.recovery-layout { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px,6vw,75px); align-items: center; }
+.recovery-copy h1 { color: var(--navy); font-size: clamp(2.2rem,4.7vw,3.8rem); letter-spacing: -.05em; line-height: 1.08; margin: 12px 0 24px; }
+.recovery-copy > p { color: var(--muted); max-width: 480px; }
+.recovery-copy .portal-icon { width: 42px; height: 42px; }
+.recovery-card { padding: clamp(24px,4vw,38px); border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.97); box-shadow: 0 20px 50px #092b6312; min-width: 0; }
+.recovery-card h2 { margin: 0 0 22px; color: var(--navy); font-size: 1.55rem; }
+.recovery-card .field { margin-bottom: 20px; }
+.recovery-card label { display: block; font-size: .88rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.recovery-card input { width: 100%; min-height: 49px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fbfdff; font: inherit; color: var(--ink); }
+.recovery-card input:focus { outline: 2px solid var(--blue); outline-offset: 2px; }
+.password-wrapper { position: relative; }
+.recovery-card .password-wrapper input { padding-right: 60px; }
+.recovery-card .toggle-password { position: absolute; inset: 3px 3px 3px auto; display: grid; place-items: center; width: 44px; border: 0; background: transparent; color: var(--blue); border-radius: 8px; cursor: pointer; }
+.toggle-password svg { width: 21px; height: 21px; }
+.toggle-password:focus-visible { outline: 2px solid var(--blue); }
+.validation-list { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 15px; padding: 0; margin: -3px 0 23px; list-style: none; color: var(--muted); font-size: .76rem; }
+.validation-list li::before { content: ''; display: inline-block; width: 7px; height: 7px; border: 1px solid #92a8ba; border-radius: 50%; margin-right: 7px; }
+.validation-list .valid { color: #24682c; }
+.validation-list .valid::before { border-color: #3a8c41; background: #3a8c41; }
+.match-message { min-height: 20px; font-size: .8rem; color: var(--muted); }
+.match-message.invalid { color: #9c332a; }
+.match-message.valid { color: #24682c; }
+.recovery-card .button { width: 100%; margin-top: 10px; cursor: pointer; }
+.recovery-card .support-status { line-height: 1.6; }
+.recovery-account-note { margin: 23px 0 0; font-size: .8rem; line-height: 1.6; color: var(--muted); }
+.recovery-brand { display: block; max-width: 150px; max-height: 100px; object-fit: contain; margin-bottom: 25px; }
+.hidden, [hidden] { display: none !important; }
+@media (max-width: 780px) {
+  .account-grid,.company-services,.recovery-layout { grid-template-columns: 1fr; }
+  .security-card { align-items: flex-start; flex-direction: column; gap: 23px; }
+  .recovery-page main { padding-block: 35px 55px; }
+}
+@media (max-width: 540px) {
+  .support-portal-page .portal-tabs { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin; padding-bottom: 9px; }
+  .support-portal-page .portal-tab { width: 106px; min-width: 106px; min-height: 78px; flex: 0 0 106px; scroll-snap-align: start; font-size: .76rem; }
+  .portal-subcard, .company-service-card { padding: 20px; }
+  .ticket-toolbar .field, .ticket-toolbar #new-request-button { width: 100%; }
+  .portal-heading { margin-bottom: 22px; }
+  .security-card .button { width: 100% !important; }
+  .recovery-card { padding: 25px 21px; }
+  .validation-list { font-size: .72rem; gap: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .support-portal-page .portal-tab { transition: none; } }
+.support-status.info { color: #315d7c; border: 1px solid #cee1ee; background: #f0f7fc; }
+.panel-intro:not(:has(> div)) { display: block; }
+.panel-intro:not(:has(> div)) p { margin-top: 10px; }
