@@ -7,10 +7,12 @@
   <meta name="theme-color" content="#092b63">
   <title>Contact | GeorgeTech</title>
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="stylesheet" href="assets/css/site.css?v=20261026-1">
+  <link rel="stylesheet" href="assets/css/site.css?v=20261028-contact-2">
   <script src="assets/js/site.js?v=20261026-1" defer></script>
+  <!-- Contact form temporarily paused. Restore these scripts when re-enabling the section below.
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-  <script src="assets/js/contact.js" type="module"></script>
+  <script src="assets/js/contact.js?v=20261028-contact-2" type="module"></script>
+  -->
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -36,8 +38,8 @@
       <div class="shell contact-grid">
         <article class="contact-card reveal">
           <p class="eyebrow">New enquiries</p>
-          <h2>Start a conversation</h2>
-          <p>Complete the callback form below or email GeorgeTech directly. Please do not send passwords or sensitive customer records.</p>
+          <h2>Start a conversation</h2><p class="contact-form-paused-note">The enquiry form is temporarily unavailable. Please use the email or telephone details below.</p>
+          <p>Email or call GeorgeTech directly. Please do not send passwords or sensitive customer records.</p>
           <a class="contact-link" href="mailto:support@georgetech.uk?subject=GeorgeTech%20enquiry"><span>support@georgetech.uk</span><span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
           <a class="contact-link" href="tel:+441959474747"><span>01959 474747</span><span aria-hidden="true"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
         </article>
@@ -50,7 +52,8 @@
       </div>
     </section>
 
-    <section class="page-section callback-section" id="callback-form">
+    <!-- Temporarily hidden while the enquiry form fault is resolved; form and fields retained. -->
+    <section class="page-section callback-section" id="callback-form" data-contact-paused hidden style="display: none;">
       <div class="shell callback-layout">
         <div class="callback-copy reveal">
           <h2>Ask GeorgeTech to contact you</h2>
@@ -92,8 +95,8 @@
           <div class="field"><label for="contact-message">How can we help? *</label><textarea id="contact-message" name="message" rows="7" maxlength="4000" required></textarea></div>
           <label class="privacy-check"><input name="privacy_acknowledged" type="checkbox" required> <span>I understand that GeorgeTech will use these details to respond to my enquiry. See the <a href="privacy.html">privacy notice</a>.</span></label>
           <div class="turnstile-field" aria-label="Security verification">
+            <p class="verification-note"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8 12 3 3 5-6"/></svg><span data-verification-note role="status">Preparing secure submission…</span></p>
             <div data-turnstile-container></div>
-            <p>Security verification helps us prevent automated spam.</p>
           </div>
           <div class="form-status hidden" data-contact-status role="status"></div>
           <button class="button button-primary form-submit" type="submit" data-contact-submit>Send enquiry</button>

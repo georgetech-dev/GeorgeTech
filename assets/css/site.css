@@ -1123,3 +1123,39 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .button, .button-primary::before, .primary-nav .nav-support::before { transition: none; }
 }
+
+/* Let the callback grid shrink to the phone, including security verification. */
+.callback-layout { grid-template-columns: minmax(0,.72fr) minmax(0,1.28fr); }
+.callback-layout > *, .callback-form .form-row, .callback-form .field { min-width: 0; }
+.callback-form { width: 100%; min-width: 0; max-width: 100%; }
+.callback-copy { overflow-wrap: anywhere; }
+.callback-form input, .callback-form select, .callback-form textarea { min-width: 0; max-width: 100%; }
+.turnstile-field, [data-turnstile-container] { width: 100%; min-width: 0; max-width: 100%; }
+@media(max-width:860px){.callback-layout { grid-template-columns: minmax(0,1fr); }}
+@media(max-width:620px){.callback-form { padding: 19px 15px; }.callback-form .form-row { grid-template-columns: minmax(0,1fr); gap: 0; }}
+
+/* A comfortable privacy control and quiet, light security verification. */
+.callback-form .privacy-check { align-items: flex-start; gap: 13px; min-height: 52px; padding: 14px; margin: 8px 0 18px !important; border: 1px solid #d5e1eb; border-radius: 12px; background: #fff; cursor: pointer; }
+.callback-form .privacy-check input[type="checkbox"] { appearance: auto; -webkit-appearance: checkbox; flex: 0 0 24px; width: 24px; height: 24px; min-width: 24px; min-height: 24px; max-width: 24px; margin: 2px 0 0; padding: 0; accent-color: var(--blue); cursor: pointer; }
+.callback-form .privacy-check input[type="checkbox"]:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; box-shadow: none; }
+.callback-form .privacy-check span { min-width: 0; font-size: .88rem; line-height: 1.65; }
+.turnstile-field { margin: 0 0 18px; }
+.turnstile-field > .verification-note { display: flex; align-items: center; gap: 8px; margin: 0; color: #526c7f; font-size: .76rem; line-height: 1.5; }
+.verification-note svg { width: 18px; height: 18px; flex: 0 0 18px; color: #427742; }
+[data-turnstile-container] { margin-top: 8px; }
+
+/* About: keep the introduction and experience grid on one readable panel. */
+.about-story {
+  gap: clamp(30px,4.5vw,60px);
+  padding: clamp(30px,4.5vw,60px);
+  border: 1px solid rgba(217,226,237,.92);
+  border-radius: 24px;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 22px 60px rgba(9,43,99,.09);
+}
+.about-story > * { min-width: 0; }
+.about-story .principles { box-shadow: none; }
+@media (max-width: 620px) {
+  .about-story { padding: 25px 21px; border-radius: 20px; }
+  .about-page .page-hero h1 { font-size: clamp(2.15rem,10.3vw,3rem); overflow-wrap: anywhere; }
+}

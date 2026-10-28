@@ -1,6 +1,7 @@
 const form = document.querySelector("[data-contact-form]");
 const status = document.querySelector("[data-contact-status]");
 const submitButton = document.querySelector("[data-contact-submit]");
+const verificationNote = document.querySelector("[data-verification-note]");
 const turnstileContainer = document.querySelector("[data-turnstile-container]");
 
 const SUPABASE_URL = "https://lgchqleltppfdgtpgsbj.supabase.co";
@@ -10,6 +11,7 @@ const TURNSTILE_SITE_KEY = "0x4AAAAAAFZqFuxTCicmjtlv";
 if (form && status && submitButton && turnstileContainer) {
   let turnstileToken = "";
   let turnstileWidgetId = null;
+  let widgetSize = null;
   const defaultSubmitLabel = submitButton.textContent;
 
   const showStatus = (message, type) => {
@@ -19,6 +21,7 @@ if (form && status && submitButton && turnstileContainer) {
 
   const setVerificationReady = (isReady) => {
     submitButton.disabled = !isReady;
+    if (verificationNote) verificationNote.textContent = isReady ? "Ready to send securely." : "Preparing secure submission…";
     submitButton.textContent = defaultSubmitLabel;
   };
 
@@ -32,17 +35,25 @@ if (form && status && submitButton && turnstileContainer) {
 
   const renderTurnstile = () => {
     if (!window.turnstile || turnstileWidgetId !== null) return false;
+    widgetSize = turnstileContainer.getBoundingClientRect().width < 300 ? "compact" : "flexible";
     turnstileWidgetId = window.turnstile.render(turnstileContainer, {
       sitekey: TURNSTILE_SITE_KEY,
       action: "contact",
-      theme: "auto",
+      theme: "light",
+      appearance: "interaction-only",
+      "before-interactive-callback": () => {
+        if (verificationNote) verificationNote.textContent = "Please complete the security check below.";
+      },
+      size: widgetSize,
       callback: (token) => {
         turnstileToken = token;
         setVerificationReady(true);
       },
       "expired-callback": resetTurnstile,
       "error-callback": () => {
-        resetTurnstile();
+        turnstileToken = "";
+        setVerificationReady(false);
+        if (verificationNote) verificationNote.textContent = "Security check unavailable.";
         showStatus("Security verification could not load. Please refresh the page or contact us by email or telephone.", "error");
       },
     });
@@ -60,6 +71,16 @@ if (form && status && submitButton && turnstileContainer) {
       }
     }
   }, 100);
+
+  if ("ResizeObserver" in window) new ResizeObserver(() => {
+    const desired = turnstileContainer.getBoundingClientRect().width < 300 ? "compact" : "flexible";
+    if (!widgetSize || widgetSize === desired || turnstileWidgetId === null || !window.turnstile) return;
+    window.turnstile.remove(turnstileWidgetId);
+    turnstileWidgetId = null;
+    turnstileToken = "";
+    setVerificationReady(false);
+    renderTurnstile();
+  }).observe(turnstileContainer);
 
   const validateContactDetails = () => {
     const method = form.elements.preferred_contact.value;

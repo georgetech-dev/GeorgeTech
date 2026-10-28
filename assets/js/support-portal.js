@@ -5,7 +5,9 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
     );
 
-    import { initClientAccount } from "./client-account.js?v=20261026-1";
+    import { initClientBilling } from "./client-billing.js?v=20261028-1";
+    import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261028-2";
+    import { initClientAccount } from "./client-account.js?v=20261028-2";
 
     const byId = (id) => document.getElementById(id);
     const loadingSection = byId("loading-section");
@@ -91,7 +93,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     }
 
     function prefillRequesterFields() {
-      byId("user-email").textContent = currentUser?.email || "";
+      byId("portal-greeting").textContent = firstNameGreeting(currentProfile, currentUser);
       byId("email").value = currentUser?.email || "";
       byId("name").value = preferredName();
     }
@@ -160,7 +162,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       populateProductOptions(defaultProducts);
     }
 
-    const panelNames = ['tickets-panel','account-panel','services-panel','appointments-panel','help-panel'];
+    const panelNames = ['tickets-panel','payments-panel','account-panel','services-panel','appointments-panel','help-panel'];
     function setPanel(panelId, historyMode = 'push') {
       if (![...panelNames, 'new-ticket-panel'].includes(panelId)) panelId = 'tickets-panel';
       const activeTab = panelId === 'new-ticket-panel' ? 'tickets-panel' : panelId;
@@ -178,8 +180,14 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       const hash = '#' + panelId.replace('-panel','');
       if (historyMode && location.hash !== hash) history[historyMode === 'replace' ? 'replaceState' : 'pushState']({}, '', hash);
       if (panelId === 'tickets-panel') loadTickets();
+      if (panelId === 'payments-panel') clientBilling.load();
+      navigation.panelChanged();
     }
+    const navigation = initPortalNavigation();
+    const clientBilling = initClientBilling({supabase,getUser:()=>currentUser});
+    byId('billing-help-ticket').addEventListener('click',()=>{setPanel('new-ticket-panel');byId('subject').value='Payment enquiry';byId('details').focus();});
     const clientAccount = initClientAccount({supabase, getUser: () => currentUser,
+      onAccountLoaded: account => {if(account){currentProfile={...currentProfile,...account};prefillRequesterFields();}},
       onDetailsSaved: account => {currentProfile = {...currentProfile, ...account}; prefillRequesterFields();},
       onRequestService: name => {
         setPanel('new-ticket-panel');
@@ -490,12 +498,15 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     async function showSession(session) {
       currentUser = session?.user || null;
       loadingSection.classList.add('hidden');
-      if (!currentUser) { clientAccount.clear(); return window.location.replace('support.html'); }
+      if (!currentUser) { clientAccount.clear(); clientBilling.clear();document.body.classList.remove('portal-signed-in');byId('portal-user').hidden=true; return window.location.replace('support.html'); }
       if (loadedUserId === currentUser.id) return;
       loadedUserId = currentUser.id;
+      currentProfile = null;
+      clientBilling.clear();document.body.classList.add('portal-signed-in');byId('portal-user').hidden=false;
       loginSection.classList.add('hidden'); ticketSection.classList.remove('hidden');
       prefillRequesterFields();
       setPanel(location.hash.slice(1) + '-panel', 'replace');
+      navigation.welcome();
       await Promise.all([loadSupportProfile(), loadProducts(), loadSupportAccess(), clientAccount.load()]);
     }
     const tabs=[...document.querySelectorAll('.portal-tab')];
@@ -508,7 +519,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
         if(event.key==='Home') next=0;
         if(event.key==='End') next=tabs.length-1;
         if(next===undefined) return;
-        event.preventDefault();tabs[next].focus();setPanel(tabs[next].dataset.panel);
+        event.preventDefault();navigation.revealTab(tabs[next]);tabs[next].focus();setPanel(tabs[next].dataset.panel);
       });
     });
     window.addEventListener('popstate',()=>setPanel(location.hash.slice(1)+'-panel',false));
@@ -562,6 +573,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     });
 
     byId("logout-button").addEventListener("click", async () => {
+      clientBilling.clear();clientAccount.clear();navigation.clear();
       await supabase.auth.signOut();
       window.location.replace("support.html");
     });

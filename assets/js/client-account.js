@@ -1,4 +1,4 @@
-export function initClientAccount({supabase, getUser, onDetailsSaved, onRequestService}) {
+export function initClientAccount({supabase, getUser, onDetailsSaved, onRequestService, onAccountLoaded}) {
   const byId=id=>document.getElementById(id);
   let account=null, generation=0, cooldown=null;
   const roleNames={admin:'Company administrator',office:'Office',engineer:'Engineer',agent:'Agent',customer:'Customer',owner:'Company owner'};
@@ -56,8 +56,8 @@ export function initClientAccount({supabase, getUser, onDetailsSaved, onRequestS
       const {data,error}=await supabase.rpc('get_my_client_portal_v1');
       if(request!==generation || getUser()?.id!==user.id)return;
       if(error || !data || !Array.isArray(data.services))throw error||new Error('Account details are unavailable.');
-      renderAccount(data.account);renderServices(data.services);
-      byId('services-context').textContent=data.account?.company_name ? `${data.account.company_name} · Access for ${user.email}` : 'No company profile is linked to this account.';
+      renderAccount(data.account);onAccountLoaded?.(data.account);renderServices(data.services);
+      byId('services-context').textContent=data.account?.company_name ? `${data.account.company_name} · Your company services` : 'No company profile is linked to this account.';
       byId('account-status').className='status hidden';
       if(!data.account)message('Your sign-in is active, but a company profile has not been linked. Contact support for help.');
     } catch(_error) {

@@ -1,0 +1,58 @@
+/* Services illustrations and finite, scroll-started word sequences. */
+.services-start-title .start-phrase { display: inline-block; position: relative; }
+.services-start-title .start-outcome { color: var(--blue); white-space: nowrap; }
+.outcome-line { position: absolute; left: 0; bottom: -.18em; width: 100%; height: .22em; overflow: visible; color: var(--green); }
+.outcome-line path { stroke: currentColor; stroke-width: 4; stroke-linecap: round; }
+.services-page .digital-essentials { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 42px; align-items: center; }
+.digital-essentials ul { margin: 0; }
+.digital-essentials .detail-link { margin-top: 18px; }
+.support-panel { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px,5vw,70px); padding: clamp(28px,4.5vw,54px); border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.96); box-shadow: 0 22px 60px rgba(9,43,99,.09); }
+.support-intro h2 { margin: 20px 0; color: var(--navy); font-size: clamp(2rem,3.3vw,3rem); font-weight: 550; line-height: 1.06; letter-spacing: -.045em; }
+.support-intro > p:not(.eyebrow), .support-options p { color: var(--muted); }
+.support-options article { padding: 4px 0 23px; }
+.support-options article + article { padding-top: 24px; border-top: 1px solid var(--line); }
+.support-options article:last-child { padding-bottom: 0; }
+.support-label { display: inline-block; padding: 5px 9px; border-radius: 6px; background: #edf5e8; color: #41662e; font-size: .7rem; font-weight: 700; }
+.support-options article + article .support-label { background: #edf5ff; color: var(--blue); }
+.support-options h3 { margin: 12px 0 8px; color: var(--navy); font-size: 1.3rem; }
+.support-options p { margin: 0 0 12px; }
+.services-page #email-domains, .services-page #support { scroll-margin-top: 110px; }
+.services-page .steps { padding: 0; }
+.services-page .step-card, .services-page .step-card:not(:first-child) { min-width: 0; padding: 30px 27px; }
+.services-page .step-card::before { margin-bottom: 10px; }
+.process-visual { margin: 0 -4px 22px; color: var(--blue); }
+.process-visual svg { display: block; width: 100%; height: auto; max-height: 174px; overflow: visible; }
+.process-visual .diagram-guide { color: #b5c5d1; }
+.process-visual .diagram-green { color: #548637; }
+.process-visual .diagram-flow { color: var(--blue); }
+.services-page .step-card h3 { margin: 0 0 14px; font-size: 1.25rem; }
+.services-page .step-card p { margin: 0; }
+.services-page .services-cta { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 38px; overflow: hidden; }
+.services-cta > div { min-width: 0; }
+.services-cta .eyebrow { margin-bottom: 0; }
+.services-cta .step-sentence-stage { display: flex; align-items: center; min-height: 220px; position: relative; }
+.services-page .stepping-title { position: relative; width: 100%; font-size: clamp(2rem,3.65vw,3.35rem); line-height: 1.13; }
+.step-word { display: inline-block; transform-origin: 0 0; will-change: auto; }
+.step-word:nth-child(4), .step-word:nth-child(5) { color: var(--blue); }
+.services-motion-ready [data-services-motion][data-motion-state="pending"] { opacity: 0; }
+[data-services-motion][data-motion-state="playing"] .step-word { will-change: transform; }
+@media (max-width: 860px) {
+  .services-page .services-cta { grid-template-columns: 1fr; gap: 22px; }
+  .services-page .services-cta .button { justify-self: start; margin-top: 0; }
+  .services-cta .step-sentence-stage { min-height: 220px; }
+  .services-page .stepping-title { max-width: 640px; font-size: clamp(2rem,6vw,3rem); }
+}
+@media (max-width: 620px) {
+  .services-page .services-start-title { font-size: clamp(2.15rem,10.3vw,3rem); line-height: 1.08; }
+  .services-page .digital-essentials, .support-panel { grid-template-columns: 1fr; gap: 24px; }
+  .services-page .steps { grid-template-columns: 1fr; }
+  .services-page .step-card { border-right: 0; border-bottom: 1px solid var(--line); }
+  .services-page .step-card:last-child { border-bottom: 0; }
+  .process-visual { max-width: 300px; margin-inline: auto; }
+  .services-page .services-cta { padding: 30px 23px; }
+  .services-page .stepping-title { font-size: clamp(1.85rem,8vw,2.65rem); }
+  .services-cta .step-sentence-stage { min-height: 210px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .services-motion-ready [data-services-motion][data-motion-state="pending"] { opacity: 1; }
+}
