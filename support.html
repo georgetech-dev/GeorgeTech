@@ -60,14 +60,15 @@
     const button = document.getElementById("login-button");
     const showStatus = (message, type = "error") => { status.textContent = message; status.className = `support-status ${type}`; };
     const { data: { session } } = await supabase.auth.getSession();
-    if (session) window.location.replace("support-tickets.html");
+    const portalTarget = "support-tickets.html" + (new URLSearchParams(location.search).get("section") === "appointments" ? "#appointments" : "");
+    if (session) window.location.replace(portalTarget);
     form.addEventListener("submit", async (event) => {
       event.preventDefault(); status.className = "support-status hidden"; button.disabled = true; button.textContent = "Signing in…";
       const values = new FormData(form);
       const { error } = await supabase.auth.signInWithPassword({ email: values.get("email"), password: values.get("password") });
       button.disabled = false; button.textContent = "Sign in";
       if (error) return showStatus(error.message);
-      window.location.replace("support-tickets.html");
+      window.location.replace(portalTarget);
     });
     document.getElementById("forgot-password").addEventListener("click", async (event) => {
       event.preventDefault(); const email = document.getElementById("email").value.trim();

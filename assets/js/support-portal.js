@@ -5,6 +5,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
     );
 
+    import { initClientAppointments } from './client-appointments.js?v=20261030-appointments-1';
     import { initClientBilling } from "./client-billing.js?v=20261028-1";
     import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261028-2";
     import { initClientAccount } from "./client-account.js?v=20261028-2";
@@ -181,9 +182,11 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       if (historyMode && location.hash !== hash) history[historyMode === 'replace' ? 'replaceState' : 'pushState']({}, '', hash);
       if (panelId === 'tickets-panel') loadTickets();
       if (panelId === 'payments-panel') clientBilling.load();
+      if (panelId === 'appointments-panel') clientAppointments.load();
       navigation.panelChanged();
     }
     const navigation = initPortalNavigation();
+    const clientAppointments = initClientAppointments({supabase,getUser:()=>currentUser});
     const clientBilling = initClientBilling({supabase,getUser:()=>currentUser});
     byId('billing-help-ticket').addEventListener('click',()=>{setPanel('new-ticket-panel');byId('subject').value='Payment enquiry';byId('details').focus();});
     const clientAccount = initClientAccount({supabase, getUser: () => currentUser,
@@ -498,11 +501,11 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     async function showSession(session) {
       currentUser = session?.user || null;
       loadingSection.classList.add('hidden');
-      if (!currentUser) { clientAccount.clear(); clientBilling.clear();document.body.classList.remove('portal-signed-in');byId('portal-user').hidden=true; return window.location.replace('support.html'); }
+      if (!currentUser) { clientAccount.clear(); clientBilling.clear(); clientAppointments.clear();document.body.classList.remove('portal-signed-in');byId('portal-user').hidden=true; return window.location.replace('support.html'+(location.hash==='#appointments'?'?section=appointments':'')); }
       if (loadedUserId === currentUser.id) return;
       loadedUserId = currentUser.id;
       currentProfile = null;
-      clientBilling.clear();document.body.classList.add('portal-signed-in');byId('portal-user').hidden=false;
+      clientBilling.clear();clientAppointments.clear();document.body.classList.add('portal-signed-in');byId('portal-user').hidden=false;
       loginSection.classList.add('hidden'); ticketSection.classList.remove('hidden');
       prefillRequesterFields();
       setPanel(location.hash.slice(1) + '-panel', 'replace');
@@ -525,6 +528,12 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     window.addEventListener('popstate',()=>setPanel(location.hash.slice(1)+'-panel',false));
     byId('new-request-button').addEventListener('click',()=>setPanel('new-ticket-panel'));
     byId('help-new-request').addEventListener('click',()=>setPanel('new-ticket-panel'));
+    byId('request-video-appointment').addEventListener('click',()=>{
+      setPanel('new-ticket-panel');
+      byId('subject').value='Video appointment request';
+      byId('details').value='I would like to arrange a video appointment.\n\nWhat I would like to discuss:\n\nTimes that suit me:\n';
+      byId('details').focus();
+    });
     byId('cancel-new-request').addEventListener('click',()=>setPanel('tickets-panel'));
 
     [supportForm, replyForm].forEach((form) => {
@@ -573,7 +582,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     });
 
     byId("logout-button").addEventListener("click", async () => {
-      clientBilling.clear();clientAccount.clear();navigation.clear();
+      clientBilling.clear();clientAppointments.clear();clientAccount.clear();navigation.clear();
       await supabase.auth.signOut();
       window.location.replace("support.html");
     });

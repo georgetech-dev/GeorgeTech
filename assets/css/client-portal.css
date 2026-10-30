@@ -174,3 +174,44 @@
  .support-portal-page .header-inner { gap: 10px; }
 }
 @media(prefers-reduced-motion:reduce){.support-portal-page .portal-navigation { transition: none; }}
+
+/* Video appointments use the real guest-invitation flow. */
+.appointment-options { display:grid;grid-template-columns:1.25fr 1fr;gap:22px; }
+.appointment-options>section { min-width:0;padding:30px;border:1px solid var(--line);border-radius:14px; }
+.appointment-options .appointment-join { background:var(--navy);border-color:var(--navy);color:white; }
+.appointment-video-mark { width:47px;height:47px;padding:11px;background:#ffffff16;color:#8dc8ff;margin-bottom:28px; }
+.appointment-video-mark svg { width:100%;height:100%; }
+.appointment-label { display:block;margin:0 0 13px;font-size:.69rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue); }
+.appointment-join .appointment-label { color:#8dc8ff; }
+.appointment-options h3 { margin:0 0 17px;font-size:1.65rem;letter-spacing:-.035em;line-height:1.17; }
+.appointment-options p:not(.appointment-label) { font-size:.88rem;line-height:1.75;margin:0 0 25px;color:var(--muted); }
+.appointment-join p:not(.appointment-label) { color:#ccd7e2; }
+.appointment-options .button { width:fit-content;gap:18px; }
+.appointment-note { display:block;margin-top:16px;font-size:.73rem;line-height:1.6;color:#bdccdc; }
+.appointment-request { display:flex;flex-direction:column;justify-content:center;background:#fbfdff; }
+.appointment-phone { display:block;font-size:.8rem;margin-top:19px;color:var(--muted);text-underline-offset:3px; }
+@media(max-width:720px) { .appointment-options { grid-template-columns:1fr; }.appointment-options>section { padding:25px; }.appointment-options .button { width:100%; }.appointment-options h3 { font-size:1.45rem; } }
+
+/* Account appointments and the full-viewport Daily call. */
+.appointment-list-section h3 { color:var(--navy);font-size:1rem;margin:25px 0 15px; }
+.appointment-list { display:grid;gap:13px; }
+.appointment-card { display:flex;align-items:center;justify-content:space-between;gap:24px;padding:23px;border:1px solid var(--line);border-radius:14px;background:#fbfdff; }
+.appointment-card h4 { font-size:1.05rem;margin:0 0 9px;color:var(--navy); }
+.appointment-card p { margin:4px 0;font-size:.84rem;color:var(--muted);line-height:1.6; }
+.appointment-card .appointment-until { font-size:.76rem; }
+.appointment-card .button { width:auto;flex:0 0 auto; }
+.appointment-state,.appointment-empty { color:var(--muted);font-size:.83rem;line-height:1.6; }
+.appointment-history { margin-top:28px; }.appointment-history summary { cursor:pointer;color:var(--navy);font-size:.88rem;font-weight:700;margin-bottom:15px; }
+.appointment-request-line { display:flex;align-items:center;justify-content:space-between;gap:25px;border-top:1px solid var(--line);padding-top:25px;margin-top:30px; }
+.appointment-request-line h3 { font-size:1rem;margin:0 0 8px; }.appointment-request-line p,.appointment-help { margin:0;font-size:.82rem;color:var(--muted);line-height:1.6; }
+.appointment-request-line .button { width:auto;flex:none; }.appointment-help { margin-top:24px; }
+body.portal-video-active { overflow:hidden; }
+.portal-video-overlay { position:fixed;inset:0;z-index:10000;height:100vh;height:100dvh;display:flex;flex-direction:column;background:#101a23;color:#fff;font-family:var(--font-sans); }
+.portal-video-toolbar { display:flex;align-items:center;gap:10px;padding:max(8px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));background:#182630; }
+.portal-video-toolbar>div { flex:1;min-width:0; }.portal-video-toolbar strong { display:block;font-size:.82rem; }.portal-video-status { font-size:.73rem;color:#c0d2e3;display:block; }
+.portal-video-toolbar button { border:0;min-height:44px;border-radius:5px;padding:9px 13px;cursor:pointer;font:inherit;font-size:.75rem;background:#dce7f3;color:#071d33; }
+.portal-video-toolbar .portal-video-leave { color:#fff;background:#b63f3b; }
+.portal-video-mount { flex:1;min-height:0;padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }.portal-video-mount iframe { width:100%;height:100%;border:0;display:block; }
+.portal-video-finish { margin:auto;padding:35px;text-align:center; }.portal-video-finish h2 { color:#fff;font-size:1.8rem; }.portal-video-finish p { color:#c0d2e3;margin:18px 0 28px; }.portal-video-finish .button { width:auto;cursor:pointer; }
+.portal-video-overlay [hidden] { display:none!important; }
+@media(max-width:600px) { .appointment-card,.appointment-request-line { align-items:stretch;flex-direction:column;gap:18px; }.appointment-card .button,.appointment-request-line .button { width:100%; }.portal-video-toolbar strong { display:none; }.portal-video-status { font-size:.68rem; }.portal-video-toolbar button { font-size:.68rem;padding-inline:10px; } }

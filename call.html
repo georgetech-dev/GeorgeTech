@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#071d33">
+  <title>Your video appointment | GeorgeTech</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="assets/css/site.css?v=20261026-1">
+  <link rel="stylesheet" href="assets/css/video-call.css?v=20261030-1">
+</head>
+<body class="video-page">
+  <header class="video-header"><a class="brand" href="index.html" aria-label="GeorgeTech home"><img src="assets/images/georgetech-logo.png" alt="GeorgeTech"></a><a class="video-back" href="support-tickets.html#appointments">Client support <span aria-hidden="true">↗</span></a></header>
+  <main id="main" class="video-layout">
+    <section class="video-copy"><p class="eyebrow">A little face-to-face time</p><h1>Let’s work<br>through it<span>.</span></h1><p>A conversation, a shared screen, a clearer next step. Connect with GeorgeTech from wherever you are.</p><div class="video-details"><span>No download</span><span>No account needed</span><span>Your own private room</span></div><a class="video-phone" href="tel:+441959474747">Need a hand? <strong>01959 474747</strong></a></section>
+    <section class="join-card" aria-labelledby="title">
+      <div class="call-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="13" height="14" rx="3"/><path d="m15 9 7-4v14l-7-4"/></svg></div>
+      <p id="eyebrow" class="eyebrow">Your video appointment</p>
+      <h2 id="title" tabindex="-1">Ready when you are.</h2>
+      <p class="intro" id="intro">Have your invitation to hand? Paste the complete link below to open your call.</p>
+      <form id="invitation-form"><label for="invitation-link">Your invitation link</label><input id="invitation-link" type="url" required autocomplete="off" spellcheck="false" placeholder="Paste your GeorgeTech call link" aria-describedby="link-hint"><p class="hint" id="link-hint">Use the link sent by GeorgeTech. Keep it private.</p><button type="submit" class="button button-primary">Open invitation <span aria-hidden="true">↗</span></button></form>
+      <div id="invitation" hidden><dl><div><dt>Joining as</dt><dd id="guest-name"></dd></div><div><dt>Your host</dt><dd id="host-name"></dd></div><div><dt>Available until</dt><dd id="expires"></dd></div></dl><button id="join" class="button button-primary" type="button">Join video call <span aria-hidden="true">↗</span></button><p class="hint">You can check your camera and microphone before joining.</p></div>
+      <div id="finished" hidden><a class="button button-primary return-site" href="index.html">Close &amp; return to GeorgeTech</a><button id="rejoin" class="button secondary" type="button">Rejoin video call</button></div>
+      <div id="problem" role="alert" hidden></div>
+      <p class="support">Questions? <a href="mailto:support@georgetech.uk">support@georgetech.uk</a></p>
+      <noscript><p>Enable JavaScript to join your video appointment, or call 01959 474747 for help.</p></noscript>
+    </section>
+  </main>
+  <section id="call" hidden aria-label="Video appointment"><div class="call-toolbar"><div><strong>GeorgeTech</strong><span id="status" role="status">Connecting…</span></div><div class="call-actions"><button id="fullscreen" class="button secondary" type="button" aria-pressed="false">Full screen</button><button id="leave" class="button end" type="button">Leave call</button></div></div><div id="frame"></div><div id="call-error" role="alert" hidden></div><div id="recovery" hidden><button id="retry" class="button button-primary" type="button">Try again</button></div></section>
+  <footer class="video-footer"><span>GeorgeTech · Practical digital systems for real businesses.</span><a href="privacy.html">Privacy notice</a></footer>
+  <script type="module" src="assets/js/video-call.js?v=20261030-1"></script>
+</body>
+</html>
