@@ -20,7 +20,7 @@ export function initClientAppointments({supabase,getUser,openVideo=openPortalVid
   else details.append(node('p','appointment-until','Available until '+new Intl.DateTimeFormat('en-GB',{timeStyle:'short',timeZone:'Europe/London'}).format(new Date(a.ends_at))));
   e.append(details);if(a.can_join){const b=node('button','button button-primary','Join appointment');b.type='button';b.onclick=()=>join(a);e.append(b);}else if(a.status==='scheduled')e.append(node('span','appointment-state','Join opens at the appointment time'));return e;
  }
- async function load(){const user=getUser();if(!user)return;const version=++generation;status('Loading…');$('refresh-appointments').disabled=true;
+ async function load(){const user=getUser();if(!user)return;const version=++generation;status('Loading…');$('refresh-appointments').disabled=true;$('refresh-appointments').setAttribute('aria-busy','true');
   try{const {data,error}=await supabase.rpc('get_my_video_appointments_v1');if(version!==generation||getUser()?.id!==user.id)return;if(error)throw error;const response=validateAppointments(data);
    $('appointments-upcoming').replaceChildren();$('appointments-past').replaceChildren();
    if(!response.can_view){status('Appointments are unavailable for this account. Please contact GeorgeTech.',true);return;}
@@ -28,7 +28,7 @@ export function initClientAppointments({supabase,getUser,openVideo=openPortalVid
    $('appointments-upcoming').replaceChildren(...(upcoming.length?upcoming.sort((a,b)=>Date.parse(a.starts_at)-Date.parse(b.starts_at)).map(card):[node('p','appointment-empty','No upcoming appointments.')]));
    $('appointments-past').replaceChildren(...past.map(card));$('appointments-history').hidden=!past.length;status('');
   }catch{if(version===generation){$('appointments-upcoming').replaceChildren();$('appointments-past').replaceChildren();$('appointments-history').hidden=true;status('Couldn’t load appointments. Please try again.',true);}}
-  finally{if(version===generation)$('refresh-appointments').disabled=false;}
+  finally{if(version===generation){$('refresh-appointments').disabled=false;$('refresh-appointments').setAttribute('aria-busy','false');}}
  }
  $('refresh-appointments').onclick=()=>load();return {load,clear};
 }

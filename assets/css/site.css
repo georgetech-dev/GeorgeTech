@@ -1159,3 +1159,13 @@ body {
   .about-story { padding: 25px 21px; border-radius: 20px; }
   .about-page .page-hero h1 { font-size: clamp(2.15rem,10.3vw,3rem); overflow-wrap: anywhere; }
 }
+
+/* A smaller masthead leaves more room for the work below it. */
+.site-header .brand { width:104px; }
+.site-header .brand img { width:100%;height:auto;max-height:94px;object-fit:contain; }
+.site-header .header-inner { min-height:98px;gap:22px;padding-block:5px; }
+@media(min-width:861px){.site-header .primary-nav a:not(.nav-support):not(.nav-phone):not(.nav-email){padding-block:24px;}}
+@media(max-width:860px){.site-header .brand { width:60px; }.site-header .brand img { max-height:60px; }.site-header .header-inner { min-height:68px;padding-block:4px;gap:12px; }}
+body.nav-open #georgetech-chat-widget { display:none!important; }
+body.client-session-active>#georgetech-chat-widget { display:none!important; }
+.ui-icon.open-icon { width:19px;height:19px;display:inline-block;vertical-align:middle;flex:none; }

@@ -1,0 +1,4 @@
+export const ticketFingerprint=ticket=>[ticket.updated_at,ticket.status].filter(Boolean).join('|');
+export const ticketReadKey=(ticket,userId)=>`georgetech-support-read:${userId||'guest'}:${ticket.id}`;
+export function isTicketUnread(ticket,userId,storage=window.localStorage){try{return storage.getItem(ticketReadKey(ticket,userId))!==ticketFingerprint(ticket);}catch{return true;}}
+export function updateUnreadBadges(tickets,userId){const count=tickets.filter(t=>isTicketUnread(t,userId)).length;for(const id of ['tickets-unread-badge','dashboard-unread-badge']){const badge=document.getElementById(id);if(badge){badge.textContent=String(count);badge.hidden=count===0;badge.setAttribute('aria-label',count+' unread tickets');}}const total=document.getElementById('dashboard-unread-count');if(total)total.textContent=String(count);return count;}

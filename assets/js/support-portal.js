@@ -1,3 +1,4 @@
+import {ticketFingerprint,ticketReadKey as readKey,isTicketUnread as unread,updateUnreadBadges} from './ticket-read-state.js?v=20261102-compact-1';
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const supabase = createClient(
@@ -5,12 +6,12 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
     );
 
-    import { initPortalDashboard } from './portal-dashboard.js?v=20261102-1';
+    import { initPortalDashboard } from './portal-dashboard.js?v=20261102-compact-1';
     import { initTicketWizard } from './ticket-wizard.js?v=20261102-1';
     import { initClientChat } from './client-chat.js?v=20261102-1';
-    import { initClientAppointments } from './client-appointments.js?v=20261102-1';
-    import { initClientBilling } from "./client-billing.js?v=20261028-1";
-    import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261102-1";
+    import { initClientAppointments } from './client-appointments.js?v=20261102-compact-1';
+    import { initClientBilling } from "./client-billing.js?v=20261102-compact-1";
+    import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261102-compact-1";
     import { initClientAccount } from "./client-account.js?v=20261028-2";
 
     const byId = (id) => document.getElementById(id);
@@ -71,21 +72,8 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       return value.replaceAll("_", " ");
     }
 
-    function ticketReadKey(ticket) {
-      return `georgetech-support-read:${currentUser?.id || "guest"}:${ticket.id}`;
-    }
-
-    function ticketFingerprint(ticket) {
-      return [ticket.updated_at, ticket.status].filter(Boolean).join("|");
-    }
-
-    function isTicketUnread(ticket) {
-      return window.localStorage.getItem(ticketReadKey(ticket)) !== ticketFingerprint(ticket);
-    }
-
-    function markTicketRead(ticket) {
-      window.localStorage.setItem(ticketReadKey(ticket), ticketFingerprint(ticket));
-    }
+    function isTicketUnread(ticket){return unread(ticket,currentUser?.id);}
+    function markTicketRead(ticket){try{window.localStorage.setItem(readKey(ticket,currentUser?.id),ticketFingerprint(ticket));}catch{}updateUnreadBadges(currentTickets,currentUser?.id);}
 
     function preferredName() {
       return currentProfile?.display_name
@@ -180,6 +168,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
         panel.classList.toggle('hidden', panel.id !== panelId);
         panel.hidden = panel.id !== panelId;
       });
+      document.body.classList.toggle('portal-chat-open',panelId==='chat-panel');
       clearStatus();
       const hash = '#' + panelId.replace('-panel','');
       if (historyMode && location.hash !== hash) history[historyMode === 'replace' ? 'replaceState' : 'pushState']({}, '', hash);
@@ -310,6 +299,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       }
 
       currentTickets = data || [];
+      updateUnreadBadges(currentTickets,currentUser?.id);
       renderTickets();
     }
 
@@ -319,6 +309,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       const sortBy = byId("ticket-sort").value;
       const tickets = currentTickets
         .filter((ticket) => showClosed || ticket.status !== "closed" || isTicketUnread(ticket))
+        .filter(ticket=>!byId("show-unread-tickets").checked||isTicketUnread(ticket))
         .sort((left, right) => {
           if (sortBy === "date_asc") return new Date(left.created_at) - new Date(right.created_at);
           if (sortBy === "status") {
@@ -537,6 +528,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       });
     });
     window.addEventListener('popstate',()=>setPanel(location.hash.slice(1)+'-panel',false));
+    byId("show-unread-tickets").addEventListener("change",renderTickets);
     byId('new-request-button').addEventListener('click',()=>setPanel('new-ticket-panel'));
     byId('help-new-request').addEventListener('click',()=>setPanel('new-ticket-panel'));
     byId('request-video-appointment').addEventListener('click',()=>{
@@ -622,7 +614,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
       if (error) {
         button.disabled = false;
-        button.innerHTML = 'Send ticket <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+        button.textContent = 'Send ticket';
         return showStatus("We couldn’t submit your request. Please try again.");
       }
 
@@ -636,7 +628,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       supportForm.reset();
       prefillRequesterFields();
       button.disabled = false;
-      button.innerHTML = 'Send ticket <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+      button.textContent = 'Send ticket';
       if (statusBox.classList.contains("hidden")) showStatus(`Ticket ${data.ticket_number} was submitted.`, "success");
       setTimeout(() => setPanel("tickets-panel"), 900);
     });
@@ -689,3 +681,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     const { data: { session } } = await supabase.auth.getSession();
     showSession(session);
     supabase.auth.onAuthStateChange((_event, nextSession) => { setTimeout(() => showSession(nextSession), 0); });
+
+// Keep the refresh feedback visible even when the network response is very quick.
+for(const id of ['dashboard-refresh','refresh-appointments','refresh-payments','refresh-services']){
+ const button=document.getElementById(id);if(!button)continue;
+ if(!button.querySelector('svg')){button.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>';button.setAttribute('aria-label',id==='refresh-services'?'Refresh services':'Refresh');}
+ let timer;button.addEventListener('click',()=>{clearTimeout(timer);button.classList.add('is-refreshing');const done=()=>{if(button.disabled){timer=setTimeout(done,120);return;}button.classList.remove('is-refreshing');};timer=setTimeout(done,650);},true);
+}

@@ -21,7 +21,7 @@ export function initClientBilling({supabase,getUser}){
  const text=(tag,cls,value)=>{const el=document.createElement(tag);el.className=cls;el.textContent=value;return el;};
  const date=value=>{if(!value)return null;const d=new Date(value);return Number.isNaN(d.getTime())?null:new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeZone:'Europe/London'}).format(d);};
  const money=item=>{try{return new Intl.NumberFormat('en-GB',{style:'currency',currency:item.currency}).format(item.amount_minor/10**new Intl.NumberFormat('en-GB',{style:'currency',currency:item.currency}).resolvedOptions().maximumFractionDigits);}catch{return `${item.currency} ${(item.amount_minor/100).toFixed(2)}`;}};
- function empty(message){groups.forEach(group=>{byId('billing-'+group).replaceChildren(text('p','billing-empty',message));const count=byId('billing-'+group+'-count');if(count)count.textContent='—';});}
+ function empty(message){groups.forEach(group=>{byId('billing-'+group).replaceChildren(text('p','billing-empty',message));const count=byId('billing-'+group+'-count');if(count)count.textContent='None';});}
  function clear(){generation++;snapshot=null;loadedFor=null;inFlight=null;byId('billing-mode').classList.add('hidden');byId('billing-company').textContent='Your company payments and subscriptions.';empty('Payment details have not been loaded.');status('Open Payments to load your company account.');byId('refresh-payments').disabled=false;}
  async function checkout(item,kind,button){
   const user=getUser(),currentGeneration=generation,environment=snapshot?.environment;if(!user||!snapshot?.can_pay||!snapshot.checkout_available||environment!==checkoutEnvironment)return;

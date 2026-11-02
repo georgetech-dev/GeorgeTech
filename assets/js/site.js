@@ -175,12 +175,11 @@ backToTop.addEventListener("click", () => {
 });
 updateScrollProgress();
 
-let clientSignedIn = document.body.classList.contains('portal-signed-in');
-try { const session=JSON.parse(localStorage.getItem('sb-lgchqleltppfdgtpgsbj-auth-token')||'null');clientSignedIn=clientSignedIn||Boolean(session?.user&&session?.access_token); } catch {}
-if (!document.body.hasAttribute("data-no-chat") && !clientSignedIn) {
-const chatWidget = document.createElement("script");
-chatWidget.src = "https://chat.georgetech.uk/widget.js";
-chatWidget.dataset.site = "bcd47f2f-e479-4521-a472-2e10001f5c97";
-chatWidget.async = true;
-document.body.append(chatWidget);
+let publicChatLoaded=false;
+function syncPublicChat(){
+ let signedIn=document.body.classList.contains('portal-signed-in');
+ try{const session=JSON.parse(localStorage.getItem('sb-lgchqleltppfdgtpgsbj-auth-token')||'null');signedIn ||= Boolean(session?.user&&session?.access_token);}catch{}
+ document.body.classList.toggle('client-session-active',signedIn);
+ if(!signedIn&&!publicChatLoaded&&!document.body.hasAttribute('data-no-chat')){publicChatLoaded=true;const widget=document.createElement('script');widget.src='https://chat.georgetech.uk/widget.js';widget.dataset.site='bcd47f2f-e479-4521-a472-2e10001f5c97';widget.async=true;document.body.append(widget);}
 }
+syncPublicChat();window.addEventListener('storage',event=>{if(event.key===null||event.key==='sb-lgchqleltppfdgtpgsbj-auth-token')syncPublicChat();});

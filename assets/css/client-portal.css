@@ -251,3 +251,55 @@
  #portal-chat-mount { height:calc(100dvh - 300px);min-height:310px; }
  .appointment-card { padding:18px;gap:14px; }.appointment-card h4 { font-size:.98rem;margin-bottom:7px; }
 }
+
+/* Space belongs to the selected panel, not repeated headings. */
+.support-portal-page main { padding-top:14px; }
+.support-portal-page .card { padding:22px 24px; }
+.support-portal-page .portal-navigation { margin-bottom:15px; }
+.support-portal-page .portal-tabs { margin-bottom:0; }
+.support-portal-page .portal-tab { min-height:66px;padding:9px 5px;gap:5px;font-size:.78rem; }
+.support-portal-page .panel-intro { position:relative;min-height:0;margin-bottom:12px;gap:8px; }
+.support-portal-page .panel-intro:has(>h2:only-child) { display:none; }
+#dashboard-panel>.panel-intro,#appointments-panel>.panel-intro { height:0;margin:0;min-height:0; }
+#dashboard-refresh,#refresh-appointments { position:absolute;right:0;top:-4px;width:30px;height:30px;min-height:30px;z-index:1; }
+#dashboard-panel .portal-overview,#appointments-upcoming { margin-top:37px; }
+#chat-panel .panel-intro { display:none; }
+.support-portal-page .tickets-heading h2.sr-only { margin:0; }
+.support-portal-page .portal-simple-heading h2.sr-only { width:1px;margin:-1px; }
+.portal-overview { grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px; }
+.support-portal-page .overview-card { padding:18px 19px;gap:10px;border-radius:13px; }
+.overview-card strong { font-size:2rem; }.overview-open { position:absolute;bottom:17px;right:16px;color:var(--blue); }
+.portal-unread-badge { display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;margin-left:3px;border-radius:20px;background:#1268ce;color:white;font-size:.65rem;line-height:1; }
+.portal-unread-badge[hidden] { display:none; }
+.portal-service-status { padding:17px 19px;border-radius:13px; }.dashboard-actions { margin-top:15px; }
+#dashboard-panel { min-height:0; }.account-grid { gap:16px; }.portal-subcard { padding:19px; }
+.security-card { margin-top:16px;padding:18px 19px; }.account-facts>div { padding:9px 0; }.security-card h3 { margin-top:0; }.security-card .portal-icon { display:none; }
+#portal-chat-mount { height:calc(100dvh - 270px);min-height:320px; }
+.support-portal-page .portal-refresh svg { width:20px;height:20px; }
+.is-refreshing svg,[aria-busy=true].portal-refresh svg { animation:portal-refresh-spin .8s linear infinite; }
+@keyframes portal-refresh-spin { to{transform:rotate(360deg)} }
+.portal-dock-hide { display:none; }
+@media(max-width:680px){
+ .support-portal-page main { padding:8px 10px 20px; }.support-portal-page .card { padding:16px 15px; }
+ .support-portal-page .portal-navigation { position:fixed;inset:auto 0 0;display:block;margin:0;padding:0 7px env(safe-area-inset-bottom,0px);height:auto;max-height:220px;transform:translateY(var(--dock-offset,0px));transition:transform .7s cubic-bezier(.22,1,.36,1);overflow:hidden; }
+ .support-portal-page .portal-navigation.expanded { transform:translateY(var(--dock-offset,0px)); }
+ .support-portal-page .portal-tabs { grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:60px;padding:2px 0 5px;gap:4px 2px;max-height:188px;overflow:hidden; }
+ .support-portal-page .portal-tab { height:60px;min-height:0;padding:5px 1px;gap:4px;font-size:.62rem; }
+ .support-portal-page .portal-drawer-toggle { width:100%;height:28px;min-height:28px;padding:5px 38px 0;font-size:.63rem; }
+ .support-portal-page .portal-dock-hide { position:absolute;right:14px;top:3px;display:block;width:auto;min-height:25px;padding:3px 5px;border:0;background:none;color:#60758a;box-shadow:none;font-size:.62rem; }
+ .portal-dock-hide[hidden] { display:none!important; }
+ .portal-navigation[data-dock-state="2"] .portal-tab { visibility:visible; }.portal-navigation[data-dock-state="1"] .portal-tab:nth-child(n+5),.portal-navigation[data-dock-state="0"] .portal-tab { visibility:hidden; }
+ .portal-overview { grid-template-columns:repeat(3,minmax(0,1fr));gap:7px; }
+ .support-portal-page .overview-card { padding:13px 10px 15px;min-height:104px;gap:10px; }
+ .overview-card>span:first-child { font-size:.69rem;line-height:1.35; }.overview-card strong { font-size:1.6rem; }.overview-open { right:9px;bottom:12px; }.overview-open .open-icon { width:15px;height:15px; }
+ #portal-chat-mount { height:calc(100dvh - 210px);min-height:290px; }.portal-unread-badge { min-width:16px;height:16px;font-size:.58rem;padding:0 4px; }
+}
+@media(prefers-reduced-motion:reduce){.support-portal-page .portal-navigation{transition:none}.is-refreshing svg,[aria-busy=true].portal-refresh svg{animation-duration:1.8s}}
+
+#dashboard-panel>.panel-intro { display:none; }
+#dashboard-panel .portal-overview { margin-top:0; }
+#dashboard-refresh { position:static;margin-left:auto;flex:none; }
+.service-status-heading h3 { flex:1; }
+@media(max-width:680px){#portal-chat-mount{height:calc(100dvh - 112px - var(--portal-dock-height,95px));min-height:265px}}
+
+@media(max-width:680px){.support-portal-page.portal-chat-open{padding-bottom:var(--portal-dock-height,95px)}.support-portal-page.portal-chat-open main{padding-bottom:0}.overview-card>span:first-child .portal-unread-badge{vertical-align:middle;margin-left:0}.portal-tab>span{white-space:nowrap}}

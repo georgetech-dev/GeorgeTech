@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Manage your GeorgeTech support tickets, account and services.">
+  <title>Client Support | GeorgeTech</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <style>
+    :root {
+      --navy: #092b63;
+      --blue: #0d73ce;
+      --green: #65b92e;
+      --ink: #16233a;
+      --muted: #607087;
+      --line: #d9e2ed;
+      --surface: #ffffff;
+      --background: #f4f8fc;
+      --focus: rgba(13, 115, 206, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--background) url("assets/images/site-background.png") center / cover fixed no-repeat;
+    }
+
+    .site-header {
+      width: 100%;
+      height: 42px;
+      margin: 22px 0 34px;
+      padding: 0 max(24px, calc((100vw - 1120px) / 2 + 24px));
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      overflow: visible;
+      background: rgba(255, 255, 255, 0.5);
+      border-block: 1px solid var(--line);
+      box-shadow: 0 5px 18px rgba(9, 43, 99, 0.07);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      display: block;
+      width: 112px;
+      height: auto;
+    }
+
+    .site-header > a { position: relative; z-index: 1; flex: 0 0 112px; }
+
+    .header-title {
+      margin: 0;
+      padding-left: 22px;
+      border-left: 1px solid var(--line);
+      color: var(--navy);
+      font-size: clamp(1.2rem, 3vw, 1.65rem);
+      letter-spacing: -0.02em;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 42px 24px 72px;
+    }
+
+    .intro { display: none; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(101, 185, 46, 0.14);
+    }
+
+    h1 {
+      max-width: 520px;
+      margin: 0 0 18px;
+      font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      color: var(--navy);
+    }
+
+    .lead {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    .contact-note {
+      margin-top: 32px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--green);
+      border-radius: 0 12px 12px 0;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .contact-note strong { color: var(--ink); }
+    a { color: var(--blue); font-weight: 700; }
+
+    .card {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid rgba(217, 226, 237, 0.88);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: 0 24px 70px rgba(9, 43, 99, 0.11);
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      color: var(--navy);
+      font-size: 1.45rem;
+    }
+
+    .required-note {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .hidden { display: none !important; }
+
+    .status {
+      margin: 0 0 20px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .status.error { color: #8d251f; background: #fff0ee; border: 1px solid #ffc9c3; }
+    .status.success { color: #216428; background: #effaef; border: 1px solid #bde6c0; }
+
+    .access-banner {
+      margin: 0 0 22px;
+      padding: 15px 17px;
+      border: 1px solid #e6a3a0;
+      border-left: 5px solid #b3261e;
+      border-radius: 12px;
+      color: #7f1d1d;
+      background: #fff1f0;
+      line-height: 1.5;
+    }
+
+    .access-banner strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #681514;
+      font-size: .98rem;
+    }
+
+    .signed-in-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f0f6fc;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .signed-in-bar strong { display: block; color: var(--ink); }
+
+    .text-button {
+      width: auto;
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      color: var(--blue);
+      background: transparent;
+      border: 1px solid #b9d3eb;
+      box-shadow: none;
+      font-size: 0.82rem;
+    }
+
+    .text-button:hover { box-shadow: none; background: #fff; }
+
+    .form-actions { display: flex; align-items: center; gap: 16px; }
+    .form-actions button { flex: 1; }
+
+    .forgot-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.86rem;
+    }
+
+    .portal-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 26px;
+      padding: 5px;
+      border-radius: 13px;
+      background: #edf3f9;
+    }
+
+    .portal-tab {
+      padding: 10px 12px;
+      color: var(--muted);
+      background: transparent;
+      border-radius: 9px;
+      box-shadow: none;
+      font-size: 0.88rem;
+    }
+
+    .portal-tab:hover { transform: none; box-shadow: none; }
+    .portal-tab.active { color: var(--navy); background: #fff; box-shadow: 0 3px 10px rgba(9, 43, 99, 0.08); }
+
+    .tickets-heading {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .tickets-heading h2 { margin-bottom: 3px; }
+    .tickets-heading .required-note { margin: 0; }
+
+    .ticket-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+
+    .ticket-toolbar .field { min-width: 220px; margin: 0; }
+    .ticket-toolbar label:not(.checkbox-field) { margin-bottom: 5px; font-size: .78rem; }
+    .ticket-toolbar select { padding: 9px 11px; border-radius: 10px; }
+    .checkbox-field { display: inline-flex; align-items: center; gap: 9px; margin: 0; color: var(--ink); font-size: .9rem; font-weight: 750; }
+    .checkbox-field input { width: auto; }
+
+    .ticket-list { display: grid; gap: 12px; }
+
+    .ticket-group { display: grid; gap: 10px; }
+    .ticket-group + .ticket-group { margin-top: 20px; }
+    .ticket-group-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0 2px;
+      color: var(--navy);
+      font-size: .9rem;
+      font-weight: 850;
+    }
+    .ticket-group-heading::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .ticket-count { color: var(--muted); font-size: .75rem; font-weight: 800; }
+
+    .ticket-item {
+      width: 100%;
+      display: block;
+      padding: 16px;
+      color: var(--ink);
+      background: #fbfdff;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: none;
+      text-align: left;
+    }
+
+    .ticket-item:hover { transform: translateY(-1px); border-color: #a9c5df; box-shadow: 0 7px 18px rgba(9, 43, 99, 0.08); }
+    .ticket-item.unread {
+      border-color: rgba(101, 185, 46, .72);
+      box-shadow: 0 0 0 0 rgba(101, 185, 46, .38), 0 10px 24px rgba(101, 185, 46, .18);
+      animation: unreadPulse 1.65s ease-in-out infinite;
+    }
+    @keyframes unreadPulse {
+      0% { box-shadow: 0 0 0 0 rgba(101, 185, 46, .34), 0 10px 24px rgba(101, 185, 46, .16); }
+      70% { box-shadow: 0 0 0 9px rgba(101, 185, 46, 0), 0 10px 24px rgba(101, 185, 46, .16); }
+      100% { box-shadow: 0 0 0 0 rgba(101, 185, 46, 0), 0 10px 24px rgba(101, 185, 46, .16); }
+    }
+    .ticket-meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; color: var(--muted); font-size: 0.78rem; }
+    .ticket-subject { margin: 0 0 5px; color: var(--navy); font-weight: 800; }
+    .ticket-product { color: var(--muted); font-size: 0.82rem; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #174d7a;
+      background: #e8f3fd;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .badge.closed, .badge.resolved { color: #4c596a; background: #edf0f3; }
+    .badge.waiting_on_customer { color: #7a4d0a; background: #fff3d9; }
+    .badge.unread-pill { color: #245b14; background: #e6f6df; }
+    .ticket-badges { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+    .empty-state { padding: 34px 12px; color: var(--muted); text-align: center; }
+
+    .detail-header { margin-bottom: 20px; }
+    .detail-topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .back-button { width: auto; padding: 7px 10px; color: var(--blue); background: transparent; border: 0; box-shadow: none; }
+    .back-button:hover { transform: none; box-shadow: none; background: #f0f6fc; }
+    .detail-header h2 { margin-bottom: 8px; }
+    .detail-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .meta-item { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border: 1px solid #d4e2ee; border-radius: 8px; color: #4f647a; background: #f5f9fc; font-size: .78rem; }
+    .meta-item strong { color: var(--navy); }
+    .description-title { margin: 0 0 12px !important; }
+    .ticket-description { margin: 18px 0 24px; padding: 15px; border-radius: 12px; background: #f7fafc; white-space: pre-wrap; line-height: 1.55; }
+
+    .timeline { display: grid; gap: 12px; margin: 18px 0 24px; }
+    .comment { width: min(82%, 760px); padding: 14px 16px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdff; }
+    .comment.staff { margin-right: auto; border-left: 4px solid var(--blue); border-bottom-left-radius: 4px; background: #f2f8fe; }
+    .comment.customer { margin-left: auto; border-right: 4px solid var(--green); border-bottom-right-radius: 4px; background: #f3f9ef; }
+    .comment.customer .comment-head { flex-direction: row-reverse; }
+    .comment.customer p { text-align: right; }
+    .comment.customer .attachment-grid { justify-items: end; }
+    .comment-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 7px; font-size: 0.78rem; color: var(--muted); }
+    .comment-head strong { color: var(--ink); }
+    .comment p { margin: 0; white-space: pre-wrap; line-height: 1.5; }
+
+    .attachment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 12px; }
+    #ticket-attachments:not(:empty) { margin-bottom: 28px; }
+    .attachment-grid a { display: block; }
+    .attachment-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--line); border-radius: 9px; }
+    .upload-input { padding: 10px; background: #fff; }
+    .drop-zone {
+      padding: 22px 16px;
+      border: 2px dashed #b9cde0;
+      border-radius: 13px;
+      background: #f8fbfe;
+      color: var(--muted);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .16s, background .16s, box-shadow .16s;
+    }
+    .drop-zone strong { display: block; margin-bottom: 4px; color: var(--navy); }
+    .drop-zone span { font-size: .82rem; }
+    .drop-zone:hover, .drop-zone.dragging, .drop-zone:focus { outline: 0; border-color: var(--blue); background: #eef7ff; box-shadow: 0 0 0 4px var(--focus); }
+    .drop-zone input { display: none; }
+    .file-preview { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 10px; }
+    .file-chip { max-width: 180px; padding: 5px 8px; overflow: hidden; border-radius: 7px; color: #31506d; background: #e5f0fa; font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; }
+    .reply-box { padding-top: 20px; border-top: 1px solid var(--line); }
+    .reply-box textarea { min-height: 100px; }
+    .danger-button { margin-top: 14px; color: #9b2c27; background: transparent; border: 1px solid #e8b4b0; box-shadow: none; }
+    .danger-button:hover { box-shadow: none; background: #fff4f3; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field { margin-bottom: 19px; }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #263650;
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 12px 14px;
+      color: var(--ink);
+      background: #fbfdff;
+      font: inherit;
+      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 4px var(--focus);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .hint {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
+    button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 20px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--navy));
+      box-shadow: 0 10px 24px rgba(13, 115, 206, 0.24);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.16s, box-shadow 0.16s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 13px 28px rgba(13, 115, 206, 0.3);
+    }
+
+    button:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+
+    footer {
+      padding: 0 24px 30px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 820px) {
+      .site-header { height: 40px; margin-block: 22px 30px; padding: 0 16px; }
+      .site-header > a { flex-basis: 96px; }
+      .logo { width: 96px; }
+      main { padding-top: 12px; }
+      .intro { padding-top: 8px; }
+      .lead { max-width: 650px; }
+      .tickets-heading { align-items: flex-start; }
+      .ticket-toolbar { width: 100%; justify-content: space-between; }
+    }
+
+    @media (max-width: 540px) {
+      main { padding-inline: 16px; }
+      .site-header { padding-inline: 16px; }
+      .row { grid-template-columns: 1fr; gap: 0; }
+      .card { border-radius: 18px; padding: 22px 18px; }
+      .attachment-grid { grid-template-columns: repeat(2, 1fr); }
+      .comment { width: 92%; }
+    }
+  </style>
+  <link rel="stylesheet" href="assets/css/site.css?v=20261102-compact-1">
+  <script src="assets/js/site.js?v=20261102-compact-1" defer></script>
+  <link rel="stylesheet" href="assets/css/client-portal.css?v=20261102-compact-1">
+  <link rel="stylesheet" href="assets/css/portal-video.css?v=20261102-1">
+</head>
+<body class="support-portal-page" data-no-chat>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="GeorgeTech home"><img src="assets/images/georgetech-logo.png" alt="GeorgeTech"></a>
+      <div class="portal-user" id="portal-user" hidden><span id="portal-greeting">Hello</span><button type="button" class="portal-signout" id="logout-button">Sign out</button></div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" data-nav-toggle><span class="sr-only">Open navigation</span><span></span><span></span><span></span></button>
+      <nav class="primary-nav" id="primary-nav" aria-label="Main navigation" data-primary-nav>
+        <a href="index.html">Home</a><a href="services.html">Services</a><a href="about.html">About</a><a href="contact.html">Contact</a><a class="nav-support active" href="support.html" aria-current="page">Client support</a><div class="nav-contact"><a class="nav-phone" href="tel:+441959474747" aria-label="Call GeorgeTech on 01959 474747">01959 474747</a><a class="nav-email" href="mailto:support@georgetech.uk">support@georgetech.uk</a></div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">GeorgeTech support</p>
+      <h1 id="page-title">How can we help?</h1>
+      <p class="lead">Sign in, tell us what happened, and include as much detail as you can. You’ll receive a ticket reference as soon as your request is recorded.</p>
+
+      <div class="contact-note">
+        <strong>Prefer email?</strong><br>
+        Contact us directly at <a href="mailto:support@georgetech.uk">support@georgetech.uk</a>.
+      </div>
+    </section>
+
+    <section class="card" aria-live="polite">
+      <div id="status" class="status hidden" role="status"></div>
+
+      <div id="loading-section">
+        <h2>Loading support…</h2>
+      </div>
+
+      <div id="login-section" class="hidden">
+        <h2>Sign in to support</h2>
+        <p class="required-note">Use your GeorgeTech account to submit and track support requests.</p>
+        <form id="login-form">
+          <div class="field">
+            <label for="login-email">Email address *</label>
+            <input id="login-email" name="email" type="email" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Password *</label>
+            <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+          </div>
+          <button id="login-button" type="submit">Sign in</button>
+          <a class="forgot-link" href="#" id="forgot-password">Forgot your password?</a>
+        </form>
+      </div>
+
+      <div id="ticket-section" class="hidden">
+        <h1 class="sr-only">Client support</h1>
+        <div id="access-banner" class="access-banner hidden" role="alert"></div>
+        <nav data-dock-state="2" class="portal-navigation" aria-label="Client Support navigation" id="portal-navigation"><button type="button" class="portal-drawer-toggle" id="portal-drawer-toggle" aria-expanded="false" aria-controls="portal-tabs"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 14 5-5 5 5"/></svg><span>More options</span></button><button class="portal-dock-hide" id="portal-dock-hide" type="button" aria-label="Hide menu">Hide</button><div class="portal-tabs" id="portal-tabs" role="tablist" aria-label="Client support sections"><button class="portal-tab active" type="button" role="tab" id="tab-dashboard" aria-selected="true" aria-controls="dashboard-panel" tabindex="0" data-panel="dashboard-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Dashboard</span></button><button class="portal-tab" type="button" role="tab" id="tab-tickets" aria-selected="false" aria-controls="tickets-panel" tabindex="-1" data-panel="tickets-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 10h8m-8 5h5M8 3v4m8-4v4"/></svg><span>Tickets <b class="portal-unread-badge" id="tickets-unread-badge" hidden></b></span></button><button class="portal-tab" type="button" role="tab" id="tab-payments" aria-selected="false" aria-controls="payments-panel" tabindex="-1" data-panel="payments-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/></svg><span>Payments</span></button><button class="portal-tab" type="button" role="tab" id="tab-chat" aria-selected="false" aria-controls="chat-panel" tabindex="-1" data-panel="chat-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2v-9.5A8.5 8.5 0 1 1 21 11.5Z"/><path d="M7 10h9m-9 4h6"/></svg><span>Chat</span></button><button class="portal-tab" type="button" role="tab" id="tab-appointments" aria-selected="false" aria-controls="appointments-panel" tabindex="-1" data-panel="appointments-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Appointments</span></button><button class="portal-tab" type="button" role="tab" id="tab-services" aria-selected="false" aria-controls="services-panel" tabindex="-1" data-panel="services-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Services</span></button><button class="portal-tab" type="button" role="tab" id="tab-help" aria-selected="false" aria-controls="help-panel" tabindex="-1" data-panel="help-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4m0 3h.01"/></svg><span>Help</span></button><button class="portal-tab" type="button" role="tab" id="tab-account" aria-selected="false" aria-controls="account-panel" tabindex="-1" data-panel="account-panel"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>My account</span></button></div></nav>
+
+        <section id="dashboard-panel" data-portal-panel role="tabpanel" aria-labelledby="tab-dashboard" tabindex="0">
+          <div class="panel-intro portal-simple-heading"><h2 class="sr-only">Dashboard</h2></div>
+          <div class="portal-overview"><button type="button" id="dashboard-payments" class="overview-card"><span>Payments due</span><strong id="dashboard-payments-count">None</strong><span class="overview-open" aria-hidden="true"><svg class="ui-icon open-icon" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M384 224V408a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40H271.48"/><path d="M336 64H448V176M224 288 440 72"/></svg></span></button><button type="button" id="dashboard-tickets" class="overview-card"><span>Open tickets</span><strong id="dashboard-tickets-count">0</strong><span class="overview-open" aria-hidden="true"><svg class="ui-icon open-icon" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M384 224V408a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40H271.48"/><path d="M336 64H448V176M224 288 440 72"/></svg></span></button><button type="button" id="dashboard-unread" class="overview-card"><span>Unread tickets <b class="portal-unread-badge" id="dashboard-unread-badge" hidden></b></span><strong id="dashboard-unread-count">0</strong><span class="overview-open" aria-hidden="true"><svg class="ui-icon open-icon" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M384 224V408a40 40 0 0 1-40 40H104a40 40 0 0 1-40-40V168a40 40 0 0 1 40-40H271.48"/><path d="M336 64H448V176M224 288 440 72"/></svg></span></button></div>
+          <section class="portal-service-status" id="dashboard-service-status" aria-labelledby="dashboard-service-title"><div class="service-status-heading"><svg class="service-health-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path class="health-check" d="m8 12 3 3 5-6"/><path class="health-alert" d="M12 7v6m0 3h.01"/></svg><h3 id="dashboard-service-title">Checking services…</h3><button type="button" id="dashboard-refresh" class="portal-refresh" aria-label="Refresh dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg></button></div><div id="dashboard-service-notices"></div></section>
+          <div class="dashboard-actions"><button class="button button-primary" id="dashboard-new-ticket" type="button">New ticket</button><button class="button button-secondary" id="dashboard-appointments" type="button">Appointments</button></div>
+        </section>
+        <section id="chat-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-chat" tabindex="0"><div class="panel-intro portal-simple-heading"><h2 class="sr-only">Chat</h2></div><p id="portal-chat-status" role="status"></p><div id="portal-chat-mount"></div></section>
+        <div id="tickets-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-tickets" tabindex="0">
+          <div id="ticket-list-view">
+            <div class="tickets-heading">
+              <div>
+                <h2 class="sr-only">Support tickets</h2>
+                
+              </div>
+              <div class="ticket-toolbar" aria-label="Ticket filters"><button id="new-request-button" class="button button-primary" type="button">New ticket</button>
+                <label class="checkbox-field"><input type="checkbox" id="show-unread-tickets">Unread only</label><label class="checkbox-field" for="show-closed-tickets">
+                  <input id="show-closed-tickets" type="checkbox">
+                  Show closed tickets
+                </label>
+                <div class="field">
+                  <label for="ticket-sort">View by</label>
+                  <select id="ticket-sort">
+                    <option value="date_desc">Date raised - newest first</option>
+                    <option value="date_asc">Date raised - oldest first</option>
+                    <option value="status">Status</option>
+                    <option value="product">Application</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div id="ticket-list" class="ticket-list"></div>
+          </div>
+          <div id="ticket-detail" class="hidden">
+            <div class="detail-topline">
+              <button id="back-to-tickets" class="back-button" type="button"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5m6-6-6 6 6 6"/></svg> All tickets</button>
+              <span id="detail-status" class="badge"></span>
+            </div>
+            <header class="detail-header">
+              <h2 id="detail-subject"></h2>
+              <div id="detail-reference" class="detail-meta"></div>
+            </header>
+            <h2 id="detail-description-title" class="description-title hidden"></h2>
+            <div id="detail-description" class="ticket-description"></div>
+            <div id="ticket-attachments" class="attachment-grid"></div>
+            <h2>Conversation</h2>
+            <div id="comment-timeline" class="timeline"></div>
+            <form id="reply-form" class="reply-box">
+              <div class="field">
+                <label for="reply-body">Add a comment</label>
+                <textarea id="reply-body" name="body" maxlength="5000" placeholder="Write a reply…" required></textarea>
+              </div>
+              <div class="field">
+                <label for="reply-files">Add screenshots (optional)</label>
+                <div class="drop-zone" data-input="reply-files" tabindex="0" role="button" aria-label="Add reply screenshots">
+                  <strong>Drop screenshots here</strong>
+                  <span>Click to browse or paste an image with Ctrl/Cmd+V</span>
+                  <input id="reply-files" name="screenshots" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+                  <div class="file-preview" aria-live="polite"></div>
+                </div>
+                <span class="hint">PNG, JPG, WebP or GIF. Up to 5 MB each.</span>
+              </div>
+              <button id="reply-button" type="submit">Send comment</button>
+            </form>
+            <button id="close-ticket-button" class="danger-button" type="button">Close this request</button>
+          </div>
+        </div>
+
+        <div id="new-ticket-panel" class="hidden" data-portal-panel role="region" aria-labelledby="form-title"><button class="text-button" id="cancel-new-request" type="button">Back to tickets</button>
+        <h2 id="form-title">New ticket</h2>
+        <div class="ticket-progress" aria-label="Report steps"><span id="ticket-progress-service" aria-current="step">1 · Service</span><span id="ticket-progress-details" aria-current="false">2 · Details</span></div>
+        <form id="support-form" novalidate>
+        <input id="name" name="name" type="hidden"><input id="email" name="email" type="hidden">
+        <fieldset id="ticket-step-service" aria-label="Service and report type">
+        <div class="row">
+          <div class="field">
+            <label for="product">Service</label>
+            <select id="product" name="product" required>
+              <option value="" selected disabled>Select a product</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="category">Report type</label>
+            <select id="category" name="category" required>
+              <option value="" selected disabled>Select a type</option>
+              <option>Technical issue</option>
+              <option>Account or login</option>
+              <option>Feature request</option>
+              <option>Billing</option>
+              <option>Privacy or data</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="ticket-next" type="button" class="button button-primary">Next</button>
+        </fieldset>
+        <fieldset id="ticket-step-details" aria-label="Report details" hidden>
+        <div class="field">
+          <label for="subject">Subject</label>
+          <input id="subject" name="subject" type="text" maxlength="120" placeholder="A short summary of the issue" required>
+        </div>
+
+        <div class="field">
+          <label for="details">Tell us about it</label>
+          <textarea id="details" name="details" maxlength="10000" placeholder="Describe the problem or request…" required></textarea>
+          <div class="field">
+            <label for="ticket-files">Screenshots (optional)</label>
+            <div class="drop-zone" data-input="ticket-files" tabindex="0" role="button" aria-label="Add ticket screenshots">
+              <strong>Drop screenshots here</strong>
+              <span>Click to browse or paste an image with Ctrl/Cmd+V</span>
+              <input id="ticket-files" name="screenshots" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+              <div class="file-preview" aria-live="polite"></div>
+            </div>
+            <span class="hint">PNG, JPG, WebP or GIF. Up to 5 MB each.</span>
+          </div>
+          <span class="hint">Please don’t include passwords or other sensitive information.</span>
+        </div>
+
+          <div class="ticket-step-actions"><button type="button" id="ticket-previous" class="button button-secondary">Back</button><button id="submit-button" type="submit">Send ticket</button>
+          </div></fieldset>
+        </form>
+        </div>
+<section id="payments-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-payments" tabindex="0"><div class="panel-intro"><div><h2 class="sr-only">Payments</h2><p id="billing-company">Your company payments and subscriptions.</p></div><button type="button" class="text-button" id="refresh-payments">Refresh</button></div><p class="billing-mode hidden" id="billing-mode"></p><p class="billing-status" id="billing-status" role="status">Open Payments to load your company account.</p><div class="billing-sections"><section class="billing-section" aria-labelledby="payments-due-title"><div class="billing-section-heading"><h3 id="payments-due-title">Payments due</h3><span class="billing-count" id="billing-due-count">—</span></div><p class="billing-caption">Outstanding one-off payments, including anything overdue.</p><div id="billing-due" class="billing-list"></div></section><section class="billing-section" aria-labelledby="payments-upcoming-title"><div class="billing-section-heading"><h3 id="payments-upcoming-title">Coming up</h3><span class="billing-count" id="billing-upcoming-count">—</span></div><p class="billing-caption">Scheduled one-off payments and when they are due.</p><div id="billing-upcoming" class="billing-list"></div></section><section class="billing-section" aria-labelledby="payments-subs-title"><div class="billing-section-heading"><h3 id="payments-subs-title">Subscriptions</h3><span class="billing-count" id="billing-subscriptions-count">—</span></div><p class="billing-caption">Recurring services, approval status and the next payment.</p><div id="billing-subscriptions" class="billing-list"></div></section></div><details class="billing-history"><summary>Payment history</summary><div id="billing-history" class="billing-list"></div></details><p class="billing-help">A question about a payment? <button class="billing-inline-link" type="button" id="billing-help-ticket">Contact support</button> or call <a href="tel:+441959474747">01959 474747</a>.</p></section>
+        <section id="account-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-account" tabindex="0">
+          <div class="panel-intro"><h2 class="sr-only">My account</h2></div>
+          <div id="account-status" class="status hidden" role="status"></div>
+          <div class="account-grid"><section class="portal-subcard"><h3>Personal details</h3>
+            <form id="account-details-form"><div class="field"><label for="account-name">Full name</label><input id="account-name" name="full_name" autocomplete="name" maxlength="120" required disabled></div>
+            <div class="field"><label for="account-phone">Contact number</label><input id="account-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" disabled></div>
+            <div class="field"><label for="account-email">Sign-in email</label><input id="account-email" type="email" readonly><span class="hint">Contact support if you need to change your sign-in email.</span></div>
+            <button class="button button-primary" id="save-account-details" type="submit" disabled>Save details</button></form>
+          </section><section class="portal-subcard"><h3>Your company &amp; access</h3><dl class="account-facts">
+            <div><dt>Company name</dt><dd id="account-company-name">Loading…</dd></div>
+            <div><dt>Company ID</dt><dd id="account-company-id" class="identifier">Loading…</dd></div>
+            <div><dt>Your role</dt><dd id="account-role">Loading…</dd></div>
+            <div><dt>User status</dt><dd id="account-user-status">Loading…</dd></div>
+            <div><dt>Company status</dt><dd id="account-company-status">Loading…</dd></div>
+          </dl><p class="hint">Company membership and access are managed by GeorgeTech.</p></section></div>
+          <section class="portal-subcard security-card"><div><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><h3>Password &amp; security</h3><p>Send a secure link to your sign-in email to choose a new GeorgeTech password. Your webmail password is separate.</p></div><button class="button button-primary" id="account-change-password" type="button">Change password</button></section>
+        </section>
+        <section id="services-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-services" tabindex="0">
+          <div class="panel-intro"><div><h2 class="sr-only">Your services</h2></div><button class="text-button" id="refresh-services" type="button">Refresh access</button></div>
+          <p id="services-context" class="hint">Loading your company services…</p><div id="company-services" class="company-services" aria-live="polite"></div>
+        </section>
+        <section id="appointments-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-appointments" tabindex="0">
+          <div class="panel-intro portal-simple-heading"><h2 class="sr-only">Appointments</h2><button type="button" class="portal-refresh" id="refresh-appointments" aria-label="Refresh appointments"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg></button></div>
+          <p id="appointments-status" class="appointments-status" role="status"></p>
+          <div id="appointments-upcoming" class="appointment-list"></div>
+          <details class="appointment-history" id="appointments-history" hidden><summary>Previous appointments</summary><div id="appointments-past" class="appointment-list"></div></details>
+          <button class="text-button appointment-request-simple" id="request-video-appointment" type="button">Request an appointment</button>
+        </section>
+        <section id="help-panel" class="hidden" data-portal-panel role="tabpanel" aria-labelledby="tab-help" tabindex="0">
+          <div class="panel-intro"><h2>Help centre</h2><p>Practical help with your GeorgeTech services.</p></div><div class="coming-soon-card"><svg class="coming-soon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4m0 3h.01"/></svg><span class="coming-soon-badge">Coming soon</span><h3>Guides, answers and useful tips</h3><p>We’re preparing a collection of help articles and step-by-step guides. In the meantime, raise a support ticket or get in touch.</p><button class="button button-primary" id="help-new-request" type="button">Raise a support ticket</button><a href="mailto:support@georgetech.uk">support@georgetech.uk</a></div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="shell footer-grid"><div class="footer-brand"><img src="assets/images/georgetech-logo.png" alt="GeorgeTech"><p>Practical digital systems for real businesses.</p></div><div><h2>Explore</h2><a href="services.html">Services</a><a href="about.html">About</a><a href="contact.html">Contact</a></div><div><h2 class="sr-only">Help</h2><a href="support.html">Client support</a><a href="mailto:support@georgetech.uk">support@georgetech.uk</a></div><div><h2>Information</h2><a href="privacy.html">Privacy</a><a href="accessibility.html">Accessibility</a><a href="terms.html">Website terms</a></div></div><div class="shell footer-bottom"><span>&copy; <span data-current-year>2026</span> GeorgeTech.</span><span>UK-based independent business technology studio.</span></div></footer>
+
+  <script type="module" src="assets/js/support-portal.js?v=20261102-compact-1"></script>
+</body>
+</html>
