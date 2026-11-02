@@ -5,9 +5,12 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       "sb_publishable_ZHBBlxQVW0MBUUwQ5Kv1Aw_uufRzvu1"
     );
 
-    import { initClientAppointments } from './client-appointments.js?v=20261030-appointments-1';
+    import { initPortalDashboard } from './portal-dashboard.js?v=20261102-1';
+    import { initTicketWizard } from './ticket-wizard.js?v=20261102-1';
+    import { initClientChat } from './client-chat.js?v=20261102-1';
+    import { initClientAppointments } from './client-appointments.js?v=20261102-1';
     import { initClientBilling } from "./client-billing.js?v=20261028-1";
-    import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261028-2";
+    import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261102-1";
     import { initClientAccount } from "./client-account.js?v=20261028-2";
 
     const byId = (id) => document.getElementById(id);
@@ -163,9 +166,9 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       populateProductOptions(defaultProducts);
     }
 
-    const panelNames = ['tickets-panel','payments-panel','account-panel','services-panel','appointments-panel','help-panel'];
+    const panelNames = ['dashboard-panel','chat-panel','tickets-panel','payments-panel','account-panel','services-panel','appointments-panel','help-panel'];
     function setPanel(panelId, historyMode = 'push') {
-      if (![...panelNames, 'new-ticket-panel'].includes(panelId)) panelId = 'tickets-panel';
+      if (![...panelNames, 'new-ticket-panel'].includes(panelId)) panelId = 'dashboard-panel';
       const activeTab = panelId === 'new-ticket-panel' ? 'tickets-panel' : panelId;
       document.querySelectorAll('.portal-tab').forEach(tab => {
         const active = tab.dataset.panel === activeTab;
@@ -180,15 +183,23 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       clearStatus();
       const hash = '#' + panelId.replace('-panel','');
       if (historyMode && location.hash !== hash) history[historyMode === 'replace' ? 'replaceState' : 'pushState']({}, '', hash);
+      clientChat.hide();
+      if(panelId !== 'dashboard-panel')clientDashboard.pause();
+      if (panelId === 'dashboard-panel') clientDashboard.load();
+      if (panelId === 'chat-panel') clientChat.show();
+      if (panelId === 'new-ticket-panel') ticketWizard.start();
       if (panelId === 'tickets-panel') loadTickets();
       if (panelId === 'payments-panel') clientBilling.load();
       if (panelId === 'appointments-panel') clientAppointments.load();
       navigation.panelChanged();
     }
     const navigation = initPortalNavigation();
+    const ticketWizard = initTicketWizard({form:supportForm});
+    const clientChat = initClientChat({getUser:()=>currentUser,getName:preferredName});
+    const clientDashboard = initPortalDashboard({supabase,getUser:()=>currentUser,navigate:setPanel});
     const clientAppointments = initClientAppointments({supabase,getUser:()=>currentUser});
     const clientBilling = initClientBilling({supabase,getUser:()=>currentUser});
-    byId('billing-help-ticket').addEventListener('click',()=>{setPanel('new-ticket-panel');byId('subject').value='Payment enquiry';byId('details').focus();});
+    byId('billing-help-ticket').addEventListener('click',()=>{setPanel('new-ticket-panel');byId('category').value='Billing';byId('subject').value='Payment enquiry';if(ticketWizard.details())byId('details').focus();});
     const clientAccount = initClientAccount({supabase, getUser: () => currentUser,
       onAccountLoaded: account => {if(account){currentProfile={...currentProfile,...account};prefillRequesterFields();}},
       onDetailsSaved: account => {currentProfile = {...currentProfile, ...account}; prefillRequesterFields();},
@@ -197,7 +208,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
         const select=byId('product');
         if (![...select.options].some(option=>option.value===name)) select.add(new Option(name,name));
         select.value=name; byId('subject').value='Service access: '+name;
-        byId('category').value='Account or login'; byId('details').focus();
+        byId('category').value='Account or login'; if(ticketWizard.details())byId('details').focus();
       }
     });
 
@@ -501,11 +512,11 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     async function showSession(session) {
       currentUser = session?.user || null;
       loadingSection.classList.add('hidden');
-      if (!currentUser) { clientAccount.clear(); clientBilling.clear(); clientAppointments.clear();document.body.classList.remove('portal-signed-in');byId('portal-user').hidden=true; return window.location.replace('support.html'+(location.hash==='#appointments'?'?section=appointments':'')); }
+      if (!currentUser) { clientAccount.clear(); clientBilling.clear(); clientAppointments.clear(); clientDashboard.clear(); clientChat.clear();document.body.classList.remove('portal-signed-in');byId('portal-user').hidden=true; return window.location.replace('support.html'+(panelNames.includes(location.hash.slice(1)+'-panel')?'?section='+encodeURIComponent(location.hash.slice(1)):'')); }
       if (loadedUserId === currentUser.id) return;
       loadedUserId = currentUser.id;
       currentProfile = null;
-      clientBilling.clear();clientAppointments.clear();document.body.classList.add('portal-signed-in');byId('portal-user').hidden=false;
+      clientBilling.clear();clientAppointments.clear();clientDashboard.clear();clientChat.clear();document.body.classList.add('portal-signed-in');byId('portal-user').hidden=false;
       loginSection.classList.add('hidden'); ticketSection.classList.remove('hidden');
       prefillRequesterFields();
       setPanel(location.hash.slice(1) + '-panel', 'replace');
@@ -530,9 +541,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     byId('help-new-request').addEventListener('click',()=>setPanel('new-ticket-panel'));
     byId('request-video-appointment').addEventListener('click',()=>{
       setPanel('new-ticket-panel');
+      byId('product').value='Other';byId('category').value='Other';
       byId('subject').value='Video appointment request';
       byId('details').value='I would like to arrange a video appointment.\n\nWhat I would like to discuss:\n\nTimes that suit me:\n';
-      byId('details').focus();
+      if(ticketWizard.details())byId('details').focus();
     });
     byId('cancel-new-request').addEventListener('click',()=>setPanel('tickets-panel'));
 
@@ -582,7 +594,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     });
 
     byId("logout-button").addEventListener("click", async () => {
-      clientBilling.clear();clientAppointments.clear();clientAccount.clear();navigation.clear();
+      clientBilling.clear();clientAppointments.clear();clientAccount.clear();clientDashboard.clear();clientChat.clear();navigation.clear();
       await supabase.auth.signOut();
       window.location.replace("support.html");
     });
@@ -590,7 +602,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     supportForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       clearStatus();
-      if (!supportForm.reportValidity() || !currentUser) return;
+      if (!currentUser || !ticketWizard.validate()) return;
       const files = byId("ticket-files").files;
       try { validateFiles(files); } catch (error) { return showStatus(error.message); }
 
@@ -600,7 +612,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       const values = new FormData(supportForm);
       const { data, error } = await supabase.from("support_tickets").insert({
         user_id: currentUser.id,
-        requester_name: values.get("name"),
+        requester_name: preferredName() || "Customer",
         requester_email: currentUser.email,
         product: values.get("product"),
         category: values.get("category"),
@@ -610,7 +622,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
       if (error) {
         button.disabled = false;
-        button.innerHTML = 'Submit support request <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+        button.innerHTML = 'Send ticket <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
         return showStatus("We couldn’t submit your request. Please try again.");
       }
 
@@ -624,7 +636,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
       supportForm.reset();
       prefillRequesterFields();
       button.disabled = false;
-      button.innerHTML = 'Submit support request <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+      button.innerHTML = 'Send ticket <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
       if (statusBox.classList.contains("hidden")) showStatus(`Ticket ${data.ticket_number} was submitted.`, "success");
       setTimeout(() => setPanel("tickets-panel"), 900);
     });

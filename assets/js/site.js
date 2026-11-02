@@ -175,7 +175,9 @@ backToTop.addEventListener("click", () => {
 });
 updateScrollProgress();
 
-if (!document.body.hasAttribute("data-no-chat")) {
+let clientSignedIn = document.body.classList.contains('portal-signed-in');
+try { const session=JSON.parse(localStorage.getItem('sb-lgchqleltppfdgtpgsbj-auth-token')||'null');clientSignedIn=clientSignedIn||Boolean(session?.user&&session?.access_token); } catch {}
+if (!document.body.hasAttribute("data-no-chat") && !clientSignedIn) {
 const chatWidget = document.createElement("script");
 chatWidget.src = "https://chat.georgetech.uk/widget.js";
 chatWidget.dataset.site = "bcd47f2f-e479-4521-a472-2e10001f5c97";
