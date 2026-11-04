@@ -9,7 +9,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     import { initPortalDashboard } from './portal-dashboard.js?v=20261102-compact-1';
     import { initTicketWizard } from './ticket-wizard.js?v=20261102-1';
     import { initClientChat } from './client-chat.js?v=20261102-1';
-    import { initClientAppointments } from './client-appointments.js?v=20261104-1';
+    import { initClientAppointments } from './client-appointments.js?v=20261104-experience-1';
     import { initClientBilling } from "./client-billing.js?v=20261102-compact-1";
     import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261102-compact-1";
     import { initClientAccount } from "./client-account.js?v=20261028-2";

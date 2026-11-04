@@ -1,5 +1,5 @@
 import {parseVideoInvitation, invitationFragment} from './video-invitation.js?v=20261030-1';
-import {openPortalVideo} from './portal-video.js?v=20261102-1';
+import {openPortalVideo} from './portal-video.js?v=20261104-experience-1';
 let invitation=null,activeCall=null;
 const $=id=>document.getElementById(id);
 function join(){

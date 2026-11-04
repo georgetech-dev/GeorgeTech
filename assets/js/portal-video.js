@@ -20,7 +20,7 @@ export function openPortalVideo({getAccess,onClose=()=>{},returnLabel='Appointme
  const mount=overlay.querySelector('.portal-video-mount'),connecting=overlay.querySelector('.portal-video-connecting'),finish=overlay.querySelector('.portal-video-finish'),countdown=overlay.querySelector('.portal-video-countdown');
  let frame=null,closed=false,finished=false,timer=null;
  const inert=[...document.body.children].map(element=>[element,element.inert]);inert.forEach(([element])=>{element.inert=true;});document.body.append(overlay);document.body.classList.add('portal-video-active');
- const exitFullscreen=()=>{try{if(document.fullscreenElement===overlay)Promise.resolve(document.exitFullscreen()).catch(()=>{});}catch{}};
+ const exitFullscreen=()=>{try{if((document.fullscreenElement||document.webkitFullscreenElement)===overlay){const exit=document.exitFullscreen||document.webkitExitFullscreen;if(exit)Promise.resolve(exit.call(document)).catch(()=>{});}}catch{}};
  async function destroy(){const old=frame;frame=null;if(old)try{await old.destroy();}catch{}}
  function close(reason='closed'){if(closed)return;closed=true;clearTimeout(timer);window.removeEventListener('pagehide',pagehide);exitFullscreen();void destroy();overlay.remove();document.body.classList.remove('portal-video-active');inert.forEach(([element,value])=>{element.inert=value;});previous?.focus();onClose(reason);}
  const pagehide=()=>close('pagehide');
@@ -31,7 +31,9 @@ export function openPortalVideo({getAccess,onClose=()=>{},returnLabel='Appointme
   finish.querySelector('button').focus();
  }
  overlay.querySelector('.portal-video-close').onclick=()=>close(finished?'returned':'cancelled');overlay.querySelector('.portal-video-cancel').onclick=()=>close('cancelled');overlay.querySelector('.portal-video-cancel').focus();
- // The embedded Daily UI owns all device, fullscreen and Leave controls.
+ // Request during the Join click, before asynchronous access/SDK loading consumes activation.
+ try{const request=overlay.requestFullscreen||overlay.webkitRequestFullscreen;if(request)Promise.resolve(request.call(overlay)).catch(()=>{});}catch{}
+ // Daily retains its fullscreen button for browsers that decline the request.
  window.addEventListener('pagehide',pagehide);
  void (async()=>{try{const access=validateCallAccess(await getAccess());if(closed||finished)return;const Daily=await sdk();if(closed||finished)return;
   const own=Daily.createFrame(mount,{iframeStyle:{width:'100%',height:'100%',border:'0'},showLeaveButton:true,showFullscreenButton:true});frame=own;
