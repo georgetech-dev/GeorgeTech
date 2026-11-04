@@ -16,17 +16,18 @@ export function initClientAppointments({supabase,getUser,openVideo=openPortalVid
   }});
  }
  function card(a){const e=node('article','appointment-card',''),details=node('div','appointment-card-details','');details.append(node('h4','',a.title),node('p','',new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(a.starts_at))+' · UK time'));
+  if(a.kind==='in_person')details.append(node('p','appointment-location',a.location||'Location to be confirmed'));
   if(a.status!=='scheduled')details.append(node('span','appointment-state',a.status==='completed'?'Ended':'Cancelled'));
   else details.append(node('p','appointment-until','Available until '+new Intl.DateTimeFormat('en-GB',{timeStyle:'short',timeZone:'Europe/London'}).format(new Date(a.ends_at))));
-  e.append(details);if(a.can_join){const b=node('button','button button-primary','Join appointment');b.type='button';b.onclick=()=>join(a);e.append(b);}else if(a.status==='scheduled')e.append(node('span','appointment-state','Join opens at the appointment time'));return e;
+  e.append(details);if(a.can_join){const b=node('button','button button-primary','Join appointment');b.type='button';b.onclick=()=>join(a);e.append(b);}else if(a.status==='scheduled'&&a.kind!=='in_person')e.append(node('span','appointment-state','Join opens at the appointment time'));return e;
  }
  async function load(){const user=getUser();if(!user)return;const version=++generation;status('Loading…');$('refresh-appointments').disabled=true;$('refresh-appointments').setAttribute('aria-busy','true');
-  try{const {data,error}=await supabase.rpc('get_my_video_appointments_v1');if(version!==generation||getUser()?.id!==user.id)return;if(error)throw error;const response=validateAppointments(data);
+  try{const [{data,error},visits]=await Promise.all([supabase.rpc('get_my_video_appointments_v1'),supabase.rpc('get_my_in_person_appointments_v1')]);if(version!==generation||getUser()?.id!==user.id)return;if(error)throw error;const response={...validateAppointments(data),appointments:[...data.appointments]};let visitWarning='';if(!visits.error&&visits.data){const extra=validateAppointments(visits.data);response.appointments.push(...extra.appointments.filter(a=>a.kind==='in_person'&&a.can_join===false));}else if(visits.error?.code!=='PGRST202')visitWarning='Video appointments loaded. In-person appointments could not be loaded.';
    $('appointments-upcoming').replaceChildren();$('appointments-past').replaceChildren();
    if(!response.can_view){status('Appointments are unavailable for this account. Please contact GeorgeTech.',true);return;}
    const upcoming=response.appointments.filter(a=>a.status==='scheduled'),past=response.appointments.filter(a=>a.status!=='scheduled');
    $('appointments-upcoming').replaceChildren(...(upcoming.length?upcoming.sort((a,b)=>Date.parse(a.starts_at)-Date.parse(b.starts_at)).map(card):[node('p','appointment-empty','No upcoming appointments.')]));
-   $('appointments-past').replaceChildren(...past.map(card));$('appointments-history').hidden=!past.length;status('');
+   $('appointments-past').replaceChildren(...past.map(card));$('appointments-history').hidden=!past.length;status(visitWarning,Boolean(visitWarning));
   }catch{if(version===generation){$('appointments-upcoming').replaceChildren();$('appointments-past').replaceChildren();$('appointments-history').hidden=true;status('Couldn’t load appointments. Please try again.',true);}}
   finally{if(version===generation){$('refresh-appointments').disabled=false;$('refresh-appointments').setAttribute('aria-busy','false');}}
  }
