@@ -3,7 +3,7 @@ export function paypalApprovalUrl(value,environment){
  try{const u=new URL(value);const host=environment==='sandbox'?'www.sandbox.paypal.com':environment==='live'?'www.paypal.com':null;
  return host&&u.protocol==='https:'&&u.hostname===host&&!u.port&&!u.username&&!u.password?u.href:null;}catch{return null;}
 }
-const checkoutEnvironment='sandbox'; // Enable live only after sandbox validation and an explicit rollout.
+const supportedEnvironment=value=>value==='sandbox'||value==='live';
 const chargeStatuses=['scheduled','due','overdue','processing','paid','cancelled','partially_refunded','refunded','failed','reversed'];
 const subscriptionStatuses=['pending_approval','active','suspended','cancelled','expired','failed'];
 export function validateBilling(data){
@@ -24,7 +24,7 @@ export function initClientBilling({supabase,getUser}){
  function empty(message){groups.forEach(group=>{byId('billing-'+group).replaceChildren(text('p','billing-empty',message));const count=byId('billing-'+group+'-count');if(count)count.textContent='None';});}
  function clear(){generation++;snapshot=null;loadedFor=null;inFlight=null;byId('billing-mode').classList.add('hidden');byId('billing-company').textContent='Your company payments and subscriptions.';empty('Payment details have not been loaded.');status('Open Payments to load your company account.');byId('refresh-payments').disabled=false;}
  async function checkout(item,kind,button){
-  const user=getUser(),currentGeneration=generation,environment=snapshot?.environment;if(!user||!snapshot?.can_pay||!snapshot.checkout_available||environment!==checkoutEnvironment)return;
+  const user=getUser(),currentGeneration=generation,environment=snapshot?.environment;if(!user||!snapshot?.can_pay||!snapshot.checkout_available||!supportedEnvironment(environment))return;
   button.disabled=true;button.textContent='Opening PayPal…';status('Preparing your secure PayPal checkout…');
   try{const {data,error}=await supabase.functions.invoke('billing-checkout',{body:{kind,record_id:item.id}});
    if(currentGeneration!==generation||getUser()?.id!==user.id)return;
@@ -42,7 +42,7 @@ export function initClientBilling({supabase,getUser}){
   if(item.description)el.append(text('p','',item.description));
   el.append(text('span','billing-badge '+item.status,item.status.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase())));
   const payable=kind==='subscription'?item.status==='pending_approval':item.bucket!=='history'&&['due','overdue','scheduled'].includes(item.status);
-  if(payable&&snapshot.environment===checkoutEnvironment&&snapshot.can_pay&&snapshot.checkout_available&&item.can_checkout===true){
+  if(payable&&supportedEnvironment(snapshot.environment)&&snapshot.can_pay&&snapshot.checkout_available&&item.can_checkout===true){
    const button=text('button','billing-pay',kind==='subscription'?'Approve subscription':'Pay with PayPal');button.type='button';button.addEventListener('click',()=>checkout(item,kind,button));el.append(document.createElement('br'),button);
   }
   return el;
@@ -56,7 +56,7 @@ export function initClientBilling({supabase,getUser}){
   const messages={due:'No one-off payments are due.',upcoming:'No one-off payments are scheduled.',subscriptions:'No subscriptions are listed.',history:'No completed or cancelled payments are listed.'};
   groups.forEach(group=>{const list=lists[group],host=byId('billing-'+group);host.replaceChildren(...(list.length?list.map(item=>card(item,group==='subscriptions'?'subscription':'charge')):[text('p','billing-empty',messages[group])]));const count=byId('billing-'+group+'-count');if(count)count.textContent=String(list.length);});
   const returned=new URLSearchParams(location.search).get('billing_return');
-  status(returned==='approved'?'You have returned from PayPal. The records below show the latest server-confirmed status. Refresh if confirmation is still pending.':returned==='cancelled'?'PayPal checkout was cancelled. Your outstanding items are shown below.':(!data.checkout_available||data.environment!==checkoutEnvironment)?'Your payment records are available. Online checkout is being connected.':!data.can_pay?'You can view this company account. Payment approval has not been assigned to your user.':'');
+  status(returned==='approved'?'You have returned from PayPal. The records below show the latest server-confirmed status. Refresh if confirmation is still pending.':returned==='cancelled'?'PayPal checkout was cancelled. Your outstanding items are shown below.':(!data.checkout_available||!supportedEnvironment(data.environment))?'Your payment records are available. Online checkout is temporarily unavailable.':!data.can_pay?'You can view this company account. Payment approval has not been assigned to your user.':'');
  }
  async function load(force=false){
   const user=getUser();if(!user)return;if(inFlight)return inFlight;if(!force&&loadedFor===user.id)return;
