@@ -3,6 +3,13 @@ export function paypalApprovalUrl(value,environment){
  try{const u=new URL(value);const host=environment==='sandbox'?'www.sandbox.paypal.com':environment==='live'?'www.paypal.com':null;
  return host&&u.protocol==='https:'&&u.hostname===host&&!u.port&&!u.username&&!u.password?u.href:null;}catch{return null;}
 }
+export async function checkoutErrorMessage(error,data){
+ let payload=data;
+ if(!payload?.error&&error?.context){try{const response=typeof error.context.clone==='function'?error.context.clone():error.context;payload=await response.json();}catch{}}
+ if(typeof payload?.error==='string'&&payload.error.trim())return payload.error.trim().slice(0,400);
+ const status=Number(error?.context?.status);
+ return Number.isInteger(status)&&status>=400?`Checkout was rejected (HTTP ${status}). The server returned no readable error details. Please contact GeorgeTech.`:'We could not reach checkout. Please refresh and try again.';
+}
 const supportedEnvironment=value=>value==='sandbox'||value==='live';
 const chargeStatuses=['scheduled','due','overdue','processing','paid','cancelled','partially_refunded','refunded','failed','reversed'];
 const subscriptionStatuses=['pending_approval','active','suspended','cancelled','expired','failed'];
@@ -28,10 +35,10 @@ export function initClientBilling({supabase,getUser}){
   button.disabled=true;button.textContent='Opening PayPal…';status('Preparing your secure PayPal checkout…');
   try{const {data,error}=await supabase.functions.invoke('billing-checkout',{body:{kind,record_id:item.id}});
    if(currentGeneration!==generation||getUser()?.id!==user.id)return;
-   if(error||data?.environment!==environment)throw new Error('Checkout unavailable');
+   if(error||data?.error){const message=await checkoutErrorMessage(error,data);throw new Error(message);}if(data?.environment!==environment)throw new Error('The payment environment changed. Refresh Payments before continuing.');
    const url=paypalApprovalUrl(data.approval_url,environment);if(!url)throw new Error('Checkout URL invalid');
    window.location.assign(url);
-  }catch{if(currentGeneration===generation&&getUser()?.id===user.id)status('We could not open PayPal. No payment has been confirmed here. Refresh or contact GeorgeTech.',true);}
+  }catch(error){if(currentGeneration===generation&&getUser()?.id===user.id)status((error?.message||'Checkout could not be opened.')+' No payment has been confirmed here.',true);}
   finally{if(button.isConnected){button.disabled=false;button.textContent=kind==='subscription'?'Approve subscription':'Pay with PayPal';}}
  }
  function card(item,kind){
