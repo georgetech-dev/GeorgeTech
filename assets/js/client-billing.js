@@ -13,6 +13,13 @@ export async function checkoutErrorMessage(error,data){
 const supportedEnvironment=value=>value==='sandbox'||value==='live';
 const chargeStatuses=['scheduled','due','overdue','processing','paid','cancelled','partially_refunded','refunded','failed','reversed'];
 const subscriptionStatuses=['pending_approval','active','suspended','cancelled','expired','failed'];
+export function billingReturnMessage(value){
+ if(value==='confirmed')return'PayPal has confirmed this payment. The records below show the provider-confirmed result.';
+ if(value==='failed')return'PayPal did not confirm this payment. No completed payment has been recorded.';
+ if(value==='cancelled')return'PayPal checkout was cancelled. Your outstanding items are shown below.';
+ if(value==='pending'||value==='approved')return'You have returned from PayPal. Confirmation is still pending; no payment is shown as complete until PayPal confirms it.';
+ return'';
+}
 export function validateBilling(data){
  if(!data||typeof data!=='object'||typeof data.can_view!=='boolean')throw new Error('Invalid billing response');
  if(!data.can_view)return data;
@@ -63,7 +70,7 @@ export function initClientBilling({supabase,getUser}){
   const messages={due:'No one-off payments are due.',upcoming:'No one-off payments are scheduled.',subscriptions:'No subscriptions are listed.',history:'No completed or cancelled payments are listed.'};
   groups.forEach(group=>{const list=lists[group],host=byId('billing-'+group);host.replaceChildren(...(list.length?list.map(item=>card(item,group==='subscriptions'?'subscription':'charge')):[text('p','billing-empty',messages[group])]));const count=byId('billing-'+group+'-count');if(count)count.textContent=String(list.length);});
   const returned=new URLSearchParams(location.search).get('billing_return');
-  status(returned==='approved'?'You have returned from PayPal. The records below show the latest server-confirmed status. Refresh if confirmation is still pending.':returned==='cancelled'?'PayPal checkout was cancelled. Your outstanding items are shown below.':(!data.checkout_available||!supportedEnvironment(data.environment))?'Your payment records are available. Online checkout is temporarily unavailable.':!data.can_pay?'You can view this company account. Payment approval has not been assigned to your user.':'');
+  status(billingReturnMessage(returned)||((!data.checkout_available||!supportedEnvironment(data.environment))?'Your payment records are available. Online checkout is temporarily unavailable.':!data.can_pay?'You can view this company account. Payment approval has not been assigned to your user.':''));
  }
  async function load(force=false){
   const user=getUser();if(!user)return;if(inFlight)return inFlight;if(!force&&loadedFor===user.id)return;
