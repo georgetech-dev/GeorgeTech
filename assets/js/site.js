@@ -183,3 +183,17 @@ function syncPublicChat(){
  if(!signedIn&&!publicChatLoaded&&!document.body.hasAttribute('data-no-chat')){publicChatLoaded=true;const widget=document.createElement('script');widget.src='https://chat.georgetech.uk/widget.js';widget.dataset.site='bcd47f2f-e479-4521-a472-2e10001f5c97';widget.async=true;document.body.append(widget);}
 }
 syncPublicChat();window.addEventListener('storage',event=>{if(event.key===null||event.key==='sb-lgchqleltppfdgtpgsbj-auth-token')syncPublicChat();});
+
+// Keep a mobile menu opened before sign-in from covering the customer portal.
+if(document.body.classList.contains('support-portal-page')){
+ let portalHeaderSignedIn=null;
+ const syncPortalHeader=()=>{
+  const signedIn=document.body.classList.contains('portal-signed-in');
+  if(signedIn===portalHeaderSignedIn)return;
+  portalHeaderSignedIn=signedIn;
+  if(signedIn&&(document.body.classList.contains('nav-open')||navToggle?.getAttribute('aria-expanded')==='true'))closeNavigation();
+  if(navToggle)navToggle.hidden=signedIn;
+ };
+ syncPortalHeader();
+ new MutationObserver(syncPortalHeader).observe(document.body,{attributes:true,attributeFilter:['class']});
+}
