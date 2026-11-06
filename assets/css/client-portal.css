@@ -303,3 +303,19 @@
 @media(max-width:680px){#portal-chat-mount{height:calc(100dvh - 112px - var(--portal-dock-height,95px));min-height:265px}}
 
 @media(max-width:680px){.support-portal-page.portal-chat-open{padding-bottom:var(--portal-dock-height,95px)}.support-portal-page.portal-chat-open main{padding-bottom:0}.overview-card>span:first-child .portal-unread-badge{vertical-align:middle;margin-left:0}.portal-tab>span{white-space:nowrap}}
+
+/* Payment actions retain readable text on their blue backgrounds. */
+.support-portal-page .billing-pay,
+.support-portal-page .billing-pay:hover,
+.support-portal-page .billing-pay:focus-visible,
+.support-portal-page .button-primary,
+.recovery-page .button-primary { color:#fff; }
+/* Signed-in customers use the portal navigation and a clear sign-out action. */
+.support-portal-page.portal-signed-in .nav-toggle { display:none!important; }
+.support-portal-page.portal-signed-in .portal-signout { min-height:42px;padding:9px 14px;border:1px solid #1268ce;border-radius:10px;background:#1268ce;color:#fff;font-size:.82rem;font-weight:750;line-height:1.2;box-shadow:none; }
+.support-portal-page.portal-signed-in .portal-signout:hover,
+.support-portal-page.portal-signed-in .portal-signout:focus-visible { background:#092b63;border-color:#092b63;color:#fff; }
+@media(max-width:860px){
+ .support-portal-page.portal-signed-in .portal-user { flex-direction:row;align-items:center;gap:10px;max-width:calc(100% - 76px); }
+ .support-portal-page.portal-signed-in .portal-user span { flex:1 1 auto;min-width:0;max-width:none;font-size:.8rem; }
+}
