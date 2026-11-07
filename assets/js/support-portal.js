@@ -10,7 +10,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     import { initTicketWizard } from './ticket-wizard.js?v=20261102-1';
     import { initClientChat } from './client-chat.js?v=20261102-1';
     import { initClientAppointments } from './client-appointments.js?v=20261104-experience-1';
-    import { initClientBilling } from "./client-billing.js?v=20261106-checkout-1";
+    import { initClientBilling } from "./client-billing.js?v=20261107-account-1";
     import { initPortalNavigation, firstNameGreeting } from "./portal-navigation.js?v=20261102-compact-1";
     import { initClientAccount } from "./client-account.js?v=20261028-2";
 
@@ -187,8 +187,15 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
     const clientChat = initClientChat({getUser:()=>currentUser,getName:preferredName});
     const clientDashboard = initPortalDashboard({supabase,getUser:()=>currentUser,navigate:setPanel});
     const clientAppointments = initClientAppointments({supabase,getUser:()=>currentUser});
-    const clientBilling = initClientBilling({supabase,getUser:()=>currentUser});
-    byId('billing-help-ticket').addEventListener('click',()=>{setPanel('new-ticket-panel');byId('category').value='Billing';byId('subject').value='Payment enquiry';if(ticketWizard.details())byId('details').focus();});
+    function openBillingSupport({subject='Payment enquiry',details=''}={}) {
+      setPanel('new-ticket-panel');
+      const service=byId('product');
+      if(![...service.options].some(option=>option.value==='Billing & payments'))service.add(new Option('Billing & payments','Billing & payments'));
+      service.value='Billing & payments';byId('category').value='Billing';byId('subject').value=subject;byId('details').value=details;
+      if(ticketWizard.details())byId('details').focus();
+    }
+    const clientBilling = initClientBilling({supabase,getUser:()=>currentUser,onSupport:openBillingSupport});
+    byId('billing-help-ticket').addEventListener('click',()=>openBillingSupport());
     const clientAccount = initClientAccount({supabase, getUser: () => currentUser,
       onAccountLoaded: account => {if(account){currentProfile={...currentProfile,...account};prefillRequesterFields();}},
       onDetailsSaved: account => {currentProfile = {...currentProfile, ...account}; prefillRequesterFields();},
@@ -688,3 +695,4 @@ for(const id of ['dashboard-refresh','refresh-appointments','refresh-payments','
  if(!button.querySelector('svg')){button.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>';button.setAttribute('aria-label',id==='refresh-services'?'Refresh services':'Refresh');}
  let timer;button.addEventListener('click',()=>{clearTimeout(timer);button.classList.add('is-refreshing');const done=()=>{if(button.disabled){timer=setTimeout(done,120);return;}button.classList.remove('is-refreshing');};timer=setTimeout(done,650);},true);
 }
+
