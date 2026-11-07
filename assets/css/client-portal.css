@@ -319,3 +319,79 @@
  .support-portal-page.portal-signed-in .portal-user { flex-direction:row;align-items:center;gap:10px;max-width:calc(100% - 76px); }
  .support-portal-page.portal-signed-in .portal-user span { flex:1 1 auto;min-width:0;max-width:none;font-size:.8rem; }
 }
+
+.billing-account-heading { margin-bottom: 8px; }
+.billing-account-heading p { margin: 0; font-size: .85rem; }
+.billing-account-overview { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin: 16px 0; }
+.billing-total { padding: 16px 18px; border: 1px solid #dce7f0; border-radius: 12px; background: #f4f8fc; min-width: 0; }
+.billing-total span { display: block; color: #526b80; font-size: .76rem; font-weight: 650; }
+.billing-total strong { display: block; color: #092337; font-size: 1.55rem; margin-top: 5px; overflow-wrap: anywhere; }
+.billing-total.attention { background: #fff8ed; border-color: #edd6ad; }
+.billing-total.attention strong { color: #885615; }
+.billing-account-grid { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); align-items: start; gap: 16px; }
+.billing-account-main,.billing-account-aside { display: grid; gap: 16px; min-width: 0; }
+#payments-panel .billing-section { padding: 18px; background: #fff; }
+#payments-panel .billing-section-heading { margin-bottom: 12px; }
+#payments-panel .billing-section h3 { font-size: .98rem; }
+#payments-panel .billing-list { gap: 10px; }
+#payments-panel .billing-record { padding: 15px; border-radius: 10px; background: #fbfdff; }
+#payments-panel .billing-item h4 { font-size: .9rem; }
+#payments-panel .billing-amount { font-size: 1.04rem; }
+.billing-record-meta { display: flex; flex-wrap: wrap; gap: 5px 14px; color: #566c7f; font-size: .75rem; margin-top: 9px; line-height: 1.6; }
+.billing-reference { overflow-wrap: anywhere; }
+.billing-record-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+#payments-panel .billing-record-footer .billing-badge { margin: 0; }
+.billing-record-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.support-portal-page .billing-secondary,.support-portal-page .billing-text-danger,.support-portal-page .billing-danger { display: inline-flex; justify-content: center; align-items: center; min-height: 40px; padding: 8px 12px; border: 1px solid #bfd0df; border-radius: 8px; background: #fff; color: #125fae; font: inherit; font-size: .78rem; font-weight: 650; box-shadow: none; cursor: pointer; width: auto; text-decoration: none; }
+.support-portal-page .billing-secondary:hover { background: #eaf3fc; border-color: #2a74c2; }
+.support-portal-page .billing-text-danger { color: #a23b35; border-color: transparent; background: transparent; }
+.support-portal-page .billing-text-danger:hover { background: #fff0ed; }
+#payments-panel .billing-pay { min-height: 40px; padding: 9px 13px; margin: 0; font-size: .78rem; }
+.billing-badge.needs_review,.billing-badge.checkout_cancelled,.billing-badge.cancellation_pending { color: #7a5013; background: #fff0d8; }
+.billing-badge.payment_failed,.billing-badge.reversed { color: #9a302b; background: #ffece8; }
+.billing-badge.cancelled,.billing-badge.expired { color: #536476; background: #eef1f4; }
+.billing-badge.refunded,.billing-badge.partially_refunded { color: #235c84; background: #e9f3fa; }
+#payments-panel .billing-record-note { margin-top: 10px; font-size: .76rem; line-height: 1.5; }
+.billing-description { margin-top: 10px; color: #53697d; font-size: .75rem; }
+.billing-description summary { cursor: pointer; width: fit-content; }
+#payments-panel .billing-description p { margin-top: 5px; }
+#payments-panel .billing-transaction-ref { padding-top: 8px; font-size: .7rem; font-family: ui-monospace,monospace; user-select: all; }
+.billing-forecast h4 { margin: 0; font-size: .78rem; }
+.billing-forecast .billing-caption { font-size: .73rem; margin: 9px 0 13px; line-height: 1.6; }
+.billing-chart { display: flex; gap: 5px; margin-top: 20px; margin-bottom: 15px; }
+.billing-chart-column { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+.billing-chart-value { font-size: .61rem; color: #526b80; white-space: nowrap; margin-bottom: 6px; }
+.billing-chart-stack { display: flex; flex-direction: column-reverse; justify-content: flex-start; width: min(28px,80%); height: 100px; border-bottom: 1px solid #cfdeea; background: #f4f8fc; border-radius: 4px 4px 0 0; overflow: hidden; }
+.billing-chart-bar { display: block; width: 100%; flex-shrink: 0; }
+.billing-chart-bar.recurring { background: #166bce; }
+.billing-chart-bar.one-off { background: #74ac4e; }
+.billing-chart-label { margin-top: 7px; color: #526b80; font-size: .65rem; white-space: nowrap; }
+.billing-chart-legend { display: flex; gap: 14px; color: #53697d; font-size: .7rem; margin: 10px 0 0; }
+.billing-chart-legend span::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; background: #166bce; }
+.billing-chart-legend .one-off::before { background: #74ac4e; }
+.billing-forecast-table { color: #315b7e; font-size: .72rem; }
+.billing-forecast-table summary { cursor: pointer; }
+.billing-forecast-table table { width: 100%; border-collapse: collapse; font-size: .68rem; margin-top: 9px; }
+.billing-forecast-table th,.billing-forecast-table td { text-align: right; padding: 6px 3px; border-bottom: 1px solid #e0e9f0; }
+.billing-forecast-table th:first-child,.billing-forecast-table td:first-child { text-align: left; }
+#payments-panel .billing-history { padding: 16px 18px; margin-top: 16px; }
+.billing-transaction { padding: 14px; border: 1px solid #dce7f0; border-radius: 10px; }
+.billing-transaction-id { display: flex; align-items: center; flex-wrap: wrap; gap: 7px 10px; font-size: .74rem; margin: 9px 0; }
+.billing-transaction-id > span { color: #526b80; }
+.billing-transaction-id code { overflow-wrap: anywhere; user-select: all; font-size: .78rem; }
+.billing-transaction .billing-caption { margin: 7px 0; }
+.billing-dialog { width: min(500px,calc(100% - 32px)); box-sizing: border-box; max-height: calc(100dvh - 40px); border: 1px solid #ccdae5; border-radius: 18px; padding: 0; color: #0b253a; box-shadow: 0 20px 80px #061a3840; }
+.billing-dialog::backdrop { background: #071f3b88; }
+.billing-dialog-content { padding: 24px; }
+.billing-eyebrow { color: #2266a7; font-size: .72rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 700; }
+.billing-dialog h2 { margin: 12px 0 18px; font-size: 1.35rem; line-height: 1.3; }
+.billing-dialog p { font-size: .88rem; line-height: 1.65; }
+.billing-warning { background: #fff5e8; border-left: 3px solid #d69638; border-radius: 4px; padding: 12px 14px; }
+.billing-dialog-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+.billing-dialog .billing-secondary,.billing-dialog .billing-danger { min-height: 44px; padding: 10px 13px; border: 1px solid #c4d5e3; border-radius: 8px; background: white; color: #175fa9; cursor: pointer; font: inherit; font-size: .82rem; font-weight: 650; }
+.billing-dialog .billing-danger { background: #a63831; color: white; border-color: #a63831; }
+.billing-dialog button:disabled { opacity: .6; cursor: wait; }
+.billing-dialog-status { color: #91422a; }
+.billing-dialog-status:empty { display: none; }
+@media (max-width: 1000px) { .billing-account-grid { grid-template-columns: minmax(0,1fr); } .billing-account-aside { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 640px) { .billing-account-overview { gap: 7px; } .billing-total { padding: 12px 9px; } .billing-total span { font-size: .65rem; } .billing-total strong { font-size: 1.22rem; } .billing-account-aside { grid-template-columns: minmax(0,1fr); } #payments-panel .billing-section { padding: 13px; } #payments-panel .billing-record { padding: 12px; } #payments-panel .billing-record-actions { width: 100%; } #payments-panel .billing-pay { width: auto; flex-grow: 1; } .billing-record-meta { gap: 3px 10px; font-size: .71rem; } .billing-dialog-content { padding: 19px; } .billing-dialog-actions > button { flex-grow: 1; } .billing-transaction-id code { flex-basis: 65%; } }
